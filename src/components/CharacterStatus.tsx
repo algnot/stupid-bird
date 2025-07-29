@@ -58,7 +58,11 @@ export default function CharacterStatus({
           <div key={section} className="mb-3">
             <b className="text-[#444]">{section}</b>
             {keys.map((key) =>
-              renderDiff(key, characterStatus?.[key], hatStatus?.[key]),
+              renderDiff(
+                key,
+                characterStatus?.[key] as number,
+                hatStatus?.[key] as number,
+              ),
             )}
           </div>
         ))}
