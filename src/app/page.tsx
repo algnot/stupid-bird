@@ -16,9 +16,26 @@ export default function Page() {
 
   return (
     <div
-      className="flex flex-col justify-between h-[100vh] py-5 px-10 bg-cover bg-no-repeat"
-      style={{ backgroundImage: "url('/bg.png')" }}
+      className="flex flex-col justify-between h-[100vh] p-3 bg-cover bg-no-repeat"
+      style={{
+        backgroundImage: "url('/bg.png')"
+      }}
     >
+      {/* <div className="absolute inset-0 bg-[#00000055] bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white p-6 rounded-xl shadow-lg w-[300px] text-center relative">
+          <button className="absolute top-2 right-3 text-red-500 text-xl font-bold cursor-pointer">
+            ×
+          </button>
+          <h2 className="text-xl font-bold text-[#345b95] mb-4">
+            สถานะตัวละคร
+          </h2>
+          <p className="text-[#444] mb-2">
+            {character?.info.name.th} Lv. {character?.level}
+          </p>
+          <p className="text-sm text-gray-500">ยังไม่มีรายละเอียดเพิ่มเติม</p>
+        </div>
+      </div> */}
+
       <div className="flex justify-between">
         <div className="flex items-center gap-3 bg-[#fff9d9] border-[#815230] text-[#345b95] font-bold border-2 px-4 py-2 rounded-xl">
           <div className="flex">
@@ -94,7 +111,12 @@ export default function Page() {
         )}
       </div>
 
-      <div>fepfkp3kpf</div>
+      <a
+        href="/play"
+        className="bg-[#00be00] border-[#815230] text-[#815230] border-2 rounded-md p-2 font-bold flex justify-center items-center cursor-pointer"
+      >
+        เล่นเกม
+      </a>
     </div>
   );
 }
