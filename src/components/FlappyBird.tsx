@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
 "use client";
+import { GameConfig } from "@/type/users";
 import React, { useState, useEffect } from "react";
 
 interface Pipe {
@@ -9,39 +11,29 @@ interface Pipe {
   gap: number;
 }
 
-// debuf interval
-const INTERVAL_CHANGE_DIFFICULTY = 20000;
-
-// pipe gap
-const INITIAL_PIPE_GAP = 210;
-const MIN_PIPE_GAP = 130;
-const DECRESE_PIPE_GAP_INTERVAL = 10;
-
-// pipe interval
-const INITIAL_PIPE_INTERVAL = 2100;
-const DECRESE_PIPE_INTERVAL = 50;
-const MIN_PIPE_INTERVAL = 1600;
-
-// speed
-const INITIAL_SPEED = 10;
-const INCRESE_SPEED = 0.5;
-const MAX_SPEED = 20;
-
-// gravity
-const BIRD_SIZE = 35;
-const GRAVITY = 8.5;
-const GRAVITY_TIME = 50;
-const MULTIPLY_JUMP_HEIGHT = 0.09
-
-// score
-const SECONDE_PER_SCORE = 1000;
-const INCRESE_SECONDE = 1;
-
 const PIPE_WIDTH = 60;
 const GAME_WIDTH = 600;
 const COLLISION_MARGIN = 7;
 
-export default function FlappyBird() {
+export default function FlappyBird({
+  INTERVAL_CHANGE_DIFFICULTY,
+  INITIAL_PIPE_GAP,
+  MIN_PIPE_GAP,
+  DECRESE_PIPE_GAP_INTERVAL,
+  INITIAL_PIPE_INTERVAL,
+  DECRESE_PIPE_INTERVAL,
+  MIN_PIPE_INTERVAL,
+  INITIAL_SPEED,
+  INCRESE_SPEED,
+  MAX_SPEED,
+  BIRD_SIZE,
+  GRAVITY,
+  GRAVITY_TIME,
+  MULTIPLY_JUMP_HEIGHT,
+  SECONDE_PER_SCORE,
+  INCRESE_SECONDE,
+  CHARACTER_IMAGE,
+}: GameConfig) {
   const [gameHeight, setGameHeight] = useState<number>(600);
   const [birdPosition, setBirdPosition] = useState<number>(300);
   const [pipes, setPipes] = useState<Pipe[]>([]);
@@ -51,7 +43,9 @@ export default function FlappyBird() {
   const [birdAngle, setBirdAngle] = useState<number>(0);
 
   const [pipeGap, setPipeGap] = useState<number>(INITIAL_PIPE_GAP);
-  const [pipeInterval, setPipeInterval] = useState<number>(INITIAL_PIPE_INTERVAL);
+  const [pipeInterval, setPipeInterval] = useState<number>(
+    INITIAL_PIPE_INTERVAL,
+  );
   const [pipeSpeed, setPipeSpeed] = useState<number>(INITIAL_SPEED);
 
   const restartGame = (): void => {
@@ -68,9 +62,13 @@ export default function FlappyBird() {
   useEffect(() => {
     if (gameStarted && !isGameOver) {
       const difficultyInterval = setInterval(() => {
-        setPipeGap((gap) => Math.max(MIN_PIPE_GAP, gap - DECRESE_PIPE_GAP_INTERVAL));
+        setPipeGap((gap) =>
+          Math.max(MIN_PIPE_GAP, gap - DECRESE_PIPE_GAP_INTERVAL),
+        );
         setPipeSpeed((speed) => Math.min(MAX_SPEED, speed + INCRESE_SPEED));
-        setPipeInterval((interval) => Math.max(MIN_PIPE_INTERVAL, interval - DECRESE_PIPE_INTERVAL));
+        setPipeInterval((interval) =>
+          Math.max(MIN_PIPE_INTERVAL, interval - DECRESE_PIPE_INTERVAL),
+        );
       }, INTERVAL_CHANGE_DIFFICULTY);
       return () => clearInterval(difficultyInterval);
     }
@@ -95,8 +93,8 @@ export default function FlappyBird() {
     if (!gameStarted || isGameOver) return;
 
     const intervalId = setInterval(() => {
-      const minTop = 80;
-      const maxTop = gameHeight - pipeGap - 160;
+      const minTop = 100;
+      const maxTop = gameHeight - pipeGap - 180;
       const topHeight = Math.floor(Math.random() * (maxTop - minTop) + minTop);
 
       setPipes((pipes) => [
@@ -119,7 +117,7 @@ export default function FlappyBird() {
         setPipes((oldPipes) =>
           oldPipes
             .map((pipe) => ({ ...pipe, left: pipe.left - 5 }))
-            .filter((pipe) => pipe.left + PIPE_WIDTH > 0)
+            .filter((pipe) => pipe.left + PIPE_WIDTH > 0),
         );
       }, 30);
     }
@@ -177,6 +175,24 @@ export default function FlappyBird() {
   useEffect(() => {
     if (gameStarted && !isGameOver) {
       const interval = setInterval(() => {
+        console.log({
+          INTERVAL_CHANGE_DIFFICULTY,
+          INITIAL_PIPE_GAP,
+          MIN_PIPE_GAP,
+          DECRESE_PIPE_GAP_INTERVAL,
+          INITIAL_PIPE_INTERVAL,
+          DECRESE_PIPE_INTERVAL,
+          MIN_PIPE_INTERVAL,
+          INITIAL_SPEED,
+          INCRESE_SPEED,
+          MAX_SPEED,
+          BIRD_SIZE,
+          GRAVITY,
+          GRAVITY_TIME,
+          MULTIPLY_JUMP_HEIGHT,
+          SECONDE_PER_SCORE,
+          INCRESE_SECONDE,
+        });
         setScore((score) => score + INCRESE_SECONDE);
       }, SECONDE_PER_SCORE);
       return () => clearInterval(interval);
@@ -194,10 +210,7 @@ export default function FlappyBird() {
   }, [isGameOver]);
 
   return (
-    <div
-      onClick={handleJump}
-      style={{ height: gameHeight }}
-    >
+    <div onClick={handleJump} style={{ height: gameHeight }}>
       <div
         className="absolute z-10 pointer-events-none"
         style={{
@@ -208,7 +221,7 @@ export default function FlappyBird() {
         }}
       >
         <img
-          src="/bird.png"
+          src={CHARACTER_IMAGE}
           alt="bird"
           className="absolute"
           style={{
@@ -302,14 +315,17 @@ export default function FlappyBird() {
       </div>
 
       {isGameOver && (
-        <div className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-black p-5 rounded-lg text-center font-bold text-2xl">
-          จบเกม
-          <br />
+        <div className="absolute min-w-[250px] top-[50%] left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-black p-5 rounded-lg text-center">
+          <div className="text-2xl text-[#345b95]">จบเกม</div>
+          <div className="mt-2">
+            คะแนน <b>{score}</b>
+          </div>
+
           <button
-            onClick={restartGame}
-            className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+            onClick={() => (window.location.href = "/")}
+            className="px-4 mt-4 bg-[#fff9d9] hover:bg-[#fff7c7] cursor-pointer border-[#815230] text-[#815230] border-2 p-1 rounded-sm"
           >
-            Restart
+            ไปต่อ
           </button>
         </div>
       )}

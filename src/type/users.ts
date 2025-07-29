@@ -31,6 +31,8 @@ export interface GameConfig {
     // score
     SECONDE_PER_SCORE: number;
     INCRESE_SECONDE: number;
+
+    CHARACTER_IMAGE?: string;
 }
 
 const gameConfigLabelMap: Partial<Record<keyof GameConfig, string>> = {
@@ -102,4 +104,9 @@ export interface GetOrCreateUser {
     userId: string;
     pictureUrl: string;
     displayName: string;
+}
+
+export interface GetUserStatusResponse {
+    status: GameConfig;
+    character: Item;
 }

@@ -45,7 +45,7 @@ export async function POST(req: Request) {
                 $unwind: '$info'
             }
         ]).toArray();
-
+        
         if (items.length == 0) {
             const starterItems = await db.collection('items-info').find({ starter: true }).toArray();
             const itemsList = []
