@@ -7,7 +7,7 @@ export async function POST(req: Request) {
 
         const db = await getDatabase();
         const installItems = await db.collection('items').aggregate([
-            { $match: { userId: userId } },
+            { $match: { userId: userId, isInstall: true } },
             {
                 $lookup: {
                     from: 'items-info',
