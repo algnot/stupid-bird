@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 
 // debuf interval
-const INITIAL_DIFFICULTY = 20000;
+const INTERVAL_CHANGE_DIFFICULTY = 20000;
 
 // pipe gap
 const INITIAL_PIPE_GAP = 210;
@@ -17,17 +17,13 @@ const MIN_PIPE_INTERVAL = 1600;
 // speed
 const INITIAL_SPEED = 10;
 const INCRESE_SPEED = 0.5;
-const MIN_SPEED = 20;
+const MAX_SPEED = 20;
 
 // gravity
 const BIRD_SIZE = 35;
 const GRAVITY = 8.5;
 const GRAVITY_TIME = 50;
 const MULTIPLY_JUMP_HEIGHT = 0.09
-// const BIRD_SIZE = 25;
-// const GRAVITY = 10;
-// const GRAVITY_TIME = 45;
-// const MULTIPLY_JUMP_HEIGHT = 0.1
 
 // score
 const SECONDE_PER_SCORE = 1000;
@@ -67,11 +63,11 @@ export default function FlappyBird() {
         setPipeGap((gap) =>
           Math.max(MIN_PIPE_GAP, gap - DECRESE_PIPE_GAP_INTERVAL),
         );
-        setPipeSpeed((speed) => Math.max(MIN_SPEED, speed + INCRESE_SPEED));
+        setPipeSpeed((speed) => Math.max(MAX_SPEED, speed + INCRESE_SPEED));
         setPipeInterval((interval) =>
           Math.max(MIN_PIPE_INTERVAL, interval - DECRESE_PIPE_INTERVAL),
         );
-      }, INITIAL_DIFFICULTY);
+      }, INTERVAL_CHANGE_DIFFICULTY);
       return () => clearInterval(difficultyInterval);
     }
   }, [gameStarted, isGameOver]);

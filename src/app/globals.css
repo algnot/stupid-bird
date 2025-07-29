@@ -5,6 +5,10 @@
   --background: #171717;
 }
 
+* {
+  font-family: 'Playpen Sans Thai', sans-serif;
+}
+
 body {
   background: var(--background);
 }
