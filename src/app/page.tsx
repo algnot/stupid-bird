@@ -18,7 +18,7 @@ export default function Page() {
     <div
       className="flex flex-col justify-between h-[100dvh] p-3 bg-cover bg-no-repeat"
       style={{
-        backgroundImage: "url('/bg.png')"
+        backgroundImage: "url('/bg.png')",
       }}
     >
       {/* <div className="absolute inset-0 bg-[#00000055] bg-opacity-50 flex items-center justify-center z-50">
@@ -111,12 +111,14 @@ export default function Page() {
         )}
       </div>
 
-      <a
-        href="/play"
-        className="bg-[#00be00] border-[#815230] text-[#815230] border-2 rounded-md p-2 font-bold flex justify-center items-center cursor-pointer"
-      >
-        เล่นเกม
-      </a>
+      {userData.userId !== "" && (
+        <a
+          href="/play"
+          className="bg-[#00be00] border-[#815230] text-[#815230] border-2 rounded-md p-2 font-bold flex justify-center items-center cursor-pointer"
+        >
+          เล่นเกม
+        </a>
+      )}
     </div>
   );
 }
