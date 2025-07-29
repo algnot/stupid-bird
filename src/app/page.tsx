@@ -1,10 +1,16 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
+import CharacterStatus from "@/components/CharacterStatus";
+import ItemStatus from "@/components/ItemStatus";
 import { useHelperContext } from "@/components/providers/helper-provider";
-import React, { useEffect } from "react";
+import { Item } from "@/type/users";
+import React, { useEffect, useState } from "react";
 
 export default function Page() {
   const { userData } = useHelperContext()();
+  const [isShowCharacterStatus, setIsShowCharacterStatus] =
+    useState<boolean>(false);
+  const [showItemInfo, setShowItemInfo] = useState<Item | null>(null);
 
   useEffect(() => {}, [userData]);
 
@@ -21,21 +27,20 @@ export default function Page() {
         backgroundImage: "url('/bg.png')",
       }}
     >
-      {/* <div className="absolute inset-0 bg-[#00000055] bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-white p-6 rounded-xl shadow-lg w-[300px] text-center relative">
-          <button className="absolute top-2 right-3 text-red-500 text-xl font-bold cursor-pointer">
-            ×
-          </button>
-          <h2 className="text-xl font-bold text-[#345b95] mb-4">
-            สถานะตัวละคร
-          </h2>
-          <p className="text-[#444] mb-2">
-            {character?.info.name.th} Lv. {character?.level}
-          </p>
-          <p className="text-sm text-gray-500">ยังไม่มีรายละเอียดเพิ่มเติม</p>
-        </div>
-      </div> */}
+      {isShowCharacterStatus && (
+        <CharacterStatus
+          onClose={() => setIsShowCharacterStatus(false)}
+          characterStatus={character?.info.level[0]}
+          hatStatus={hat?.info.level[0]}
+        />
+      )}
 
+      {showItemInfo !== null && !isShowCharacterStatus && (
+        <ItemStatus
+          onClose={() => setShowItemInfo(null)}
+          itemInfo={showItemInfo}
+        />
+      )}
       <div className="flex justify-between">
         <div className="flex items-center gap-3 bg-[#fff9d9] border-[#815230] text-[#345b95] font-bold border-2 px-4 py-2 rounded-xl">
           <div className="flex">
@@ -93,7 +98,8 @@ export default function Page() {
                 return (
                   <div
                     key={item._id}
-                    className="bg-[#fff9d9] border-[#815230] border-2 p-1 rounded-sm"
+                    className="bg-[#fff9d9] hover:bg-[#fff7c7] cursor-pointer border-[#815230] border-2 p-1 rounded-sm"
+                    onClick={() => setShowItemInfo(item)}
                   >
                     <img
                       className="w-[30px] h-[30px]"
@@ -104,7 +110,10 @@ export default function Page() {
                 );
               })}
             </div>
-            <div className="hover:bg-[#ffea80] bg-[#f8da38] border-[#815230] text-[#815230] border-2 rounded-md p-2 font-bold flex justify-center items-center cursor-pointer">
+            <div
+              onClick={() => setIsShowCharacterStatus(true)}
+              className="hover:bg-[#ffea80] bg-[#f8da38] border-[#815230] text-[#815230] border-2 rounded-md p-2 font-bold flex justify-center items-center cursor-pointer"
+            >
               แสดงสถานะตัวละคร
             </div>
           </div>

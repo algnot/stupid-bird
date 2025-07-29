@@ -1,5 +1,13 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import React, { useState, useEffect } from "react";
+
+interface Pipe {
+  left: number;
+  height: number;
+  gap: number;
+}
 
 // debuf interval
 const INTERVAL_CHANGE_DIFFICULTY = 20000;
@@ -34,19 +42,19 @@ const GAME_WIDTH = 600;
 const COLLISION_MARGIN = 7;
 
 export default function FlappyBird() {
-  const [gameHeight, setGameHeight] = useState(600);
-  const [birdPosition, setBirdPosition] = useState(300);
-  const [pipes, setPipes] = useState([]);
-  const [gameStarted, setGameStarted] = useState(false);
-  const [score, setScore] = useState(0);
-  const [isGameOver, setIsGameOver] = useState(false);
-  const [birdAngle, setBirdAngle] = useState(0);
+  const [gameHeight, setGameHeight] = useState<number>(600);
+  const [birdPosition, setBirdPosition] = useState<number>(300);
+  const [pipes, setPipes] = useState<Pipe[]>([]);
+  const [gameStarted, setGameStarted] = useState<boolean>(false);
+  const [score, setScore] = useState<number>(0);
+  const [isGameOver, setIsGameOver] = useState<boolean>(false);
+  const [birdAngle, setBirdAngle] = useState<number>(0);
 
-  const [pipeGap, setPipeGap] = useState(INITIAL_PIPE_GAP);
-  const [pipeInterval, setPipeInterval] = useState(INITIAL_PIPE_INTERVAL);
-  const [pipeSpeed, setPipeSpeed] = useState(INITIAL_SPEED);
+  const [pipeGap, setPipeGap] = useState<number>(INITIAL_PIPE_GAP);
+  const [pipeInterval, setPipeInterval] = useState<number>(INITIAL_PIPE_INTERVAL);
+  const [pipeSpeed, setPipeSpeed] = useState<number>(INITIAL_SPEED);
 
-  const restartGame = () => {
+  const restartGame = (): void => {
     setBirdPosition(gameHeight / 2);
     setPipes([]);
     setScore(0);
@@ -54,19 +62,15 @@ export default function FlappyBird() {
     setGameStarted(false);
     setPipeGap(INITIAL_PIPE_GAP);
     setPipeInterval(INITIAL_PIPE_INTERVAL);
-    setPipeSpeed(10);
+    setPipeSpeed(INITIAL_SPEED);
   };
 
   useEffect(() => {
     if (gameStarted && !isGameOver) {
       const difficultyInterval = setInterval(() => {
-        setPipeGap((gap) =>
-          Math.max(MIN_PIPE_GAP, gap - DECRESE_PIPE_GAP_INTERVAL),
-        );
-        setPipeSpeed((speed) => Math.max(MAX_SPEED, speed + INCRESE_SPEED));
-        setPipeInterval((interval) =>
-          Math.max(MIN_PIPE_INTERVAL, interval - DECRESE_PIPE_INTERVAL),
-        );
+        setPipeGap((gap) => Math.max(MIN_PIPE_GAP, gap - DECRESE_PIPE_GAP_INTERVAL));
+        setPipeSpeed((speed) => Math.min(MAX_SPEED, speed + INCRESE_SPEED));
+        setPipeInterval((interval) => Math.max(MIN_PIPE_INTERVAL, interval - DECRESE_PIPE_INTERVAL));
       }, INTERVAL_CHANGE_DIFFICULTY);
       return () => clearInterval(difficultyInterval);
     }
@@ -78,7 +82,7 @@ export default function FlappyBird() {
   }, []);
 
   useEffect(() => {
-    let interval;
+    let interval: NodeJS.Timeout;
     if (gameStarted && !isGameOver) {
       interval = setInterval(() => {
         setBirdPosition((pos) => pos + GRAVITY);
@@ -109,13 +113,13 @@ export default function FlappyBird() {
   }, [gameStarted, isGameOver, gameHeight, pipeGap, pipeInterval]);
 
   useEffect(() => {
-    let moveInterval;
+    let moveInterval: NodeJS.Timeout;
     if (gameStarted && !isGameOver) {
       moveInterval = setInterval(() => {
         setPipes((oldPipes) =>
           oldPipes
             .map((pipe) => ({ ...pipe, left: pipe.left - 5 }))
-            .filter((pipe) => pipe.left + PIPE_WIDTH > 0),
+            .filter((pipe) => pipe.left + PIPE_WIDTH > 0)
         );
       }, 30);
     }
@@ -136,25 +140,25 @@ export default function FlappyBird() {
       const pipeBottomY = pipe.height + pipe.gap;
       const birdTop = birdPosition;
       const birdBottom = birdPosition + BIRD_SIZE;
-  
+
       const inPipeXRange =
         pipe.left < 50 + BIRD_SIZE - COLLISION_MARGIN &&
         pipe.left + PIPE_WIDTH > 50 + COLLISION_MARGIN;
-  
+
       const hitTopPipe = birdTop < pipe.height - COLLISION_MARGIN;
       const hitBottomPipe = birdBottom > pipeBottomY + COLLISION_MARGIN;
-  
+
       if (inPipeXRange && (hitTopPipe || hitBottomPipe)) {
         endGame();
       }
     });
-  
+
     if (birdPosition >= gameHeight - BIRD_SIZE - COLLISION_MARGIN) {
       endGame();
     }
   }, [pipes, birdPosition, gameHeight]);
 
-  const handleJump = () => {
+  const handleJump = (): void => {
     if (!gameStarted) {
       setGameStarted(true);
     }
@@ -165,7 +169,7 @@ export default function FlappyBird() {
     }
   };
 
-  const endGame = () => {
+  const endGame = (): void => {
     setIsGameOver(true);
     setGameStarted(false);
   };
@@ -180,7 +184,7 @@ export default function FlappyBird() {
   }, [gameStarted, isGameOver]);
 
   useEffect(() => {
-    const onKeyDown = (e) => {
+    const onKeyDown = (e: KeyboardEvent): void => {
       if (e.code === "Space" && !isGameOver) {
         handleJump();
       }

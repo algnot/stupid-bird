@@ -6,9 +6,7 @@ export class BackendClient {
     private readonly client: AxiosInstance;
 
     constructor() {
-        this.client = axios.create({
-            // baseURL: process.env.NEXT_PUBLIC_BACKEND_PATH
-        });
+        this.client = axios.create();
     }
 
     async getOrCreateUser(payload: GetOrCreateUser): Promise<UserType | ErrorResponse> {
