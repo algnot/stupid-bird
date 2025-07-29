@@ -16,7 +16,7 @@ export default function Page() {
 
   return (
     <div
-      className="flex flex-col justify-between h-[100vh] p-3 bg-cover bg-no-repeat"
+      className="flex flex-col justify-between h-[100dvh] p-3 bg-cover bg-no-repeat"
       style={{
         backgroundImage: "url('/bg.png')"
       }}
