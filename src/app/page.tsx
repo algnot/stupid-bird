@@ -30,8 +30,8 @@ export default function Page() {
       {isShowCharacterStatus && (
         <CharacterStatus
           onClose={() => setIsShowCharacterStatus(false)}
-          characterStatus={character?.info.level[0]}
-          hatStatus={hat?.info.level[0]}
+          characterStatus={character?.info.level[character.level ?? 0]}
+          hatStatus={hat?.info.level[hat.level ?? 0]}
         />
       )}
 

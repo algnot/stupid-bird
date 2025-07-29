@@ -1,6 +1,7 @@
 import "./globals.css";
 import { HelperProvider } from "@/components/providers/helper-provider";
 import { Playpen_Sans_Thai } from "next/font/google";
+import { FullLoadingProvider } from "@/components/providers/full-loading-provider";
 
 const playpenSans = Playpen_Sans_Thai({
   subsets: ["latin"],
@@ -21,7 +22,9 @@ export default function RootLayout({
         <div
           className={`relative mx-auto select-none bg-[#70c5ce] w-[100vw] md:w-[600px] h-[100vh] overflow-hidden`}
         >
-          <HelperProvider>{children}</HelperProvider>
+          <FullLoadingProvider>
+            <HelperProvider>{children}</HelperProvider>
+          </FullLoadingProvider>
         </div>
       </body>
     </html>

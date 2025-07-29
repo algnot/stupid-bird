@@ -8,7 +8,7 @@ interface ItemStatusProps {
 }
 
 export default function ItemStatus({ itemInfo, onClose }: ItemStatusProps) {
-  const gameConfig = itemInfo?.info.level[0];
+  const gameConfig = itemInfo?.info.level[itemInfo.level ?? 0];
   const filteredKeys = Object.keys(gameConfig ?? {}).filter(
     (key) => (gameConfig?.[key as keyof GameConfig] ?? 0) !== 0,
   );
@@ -23,7 +23,7 @@ export default function ItemStatus({ itemInfo, onClose }: ItemStatusProps) {
           ×
         </button>
         <div className="text-md font-bold text-[#345b95] mb-4">
-          {itemInfo?.info.name.th ?? ""}
+          {itemInfo?.info.name.th ?? ""} Lv. {itemInfo?.level ?? 0}
         </div>
         <div className="flex justify-center mb-4">
           <img
@@ -42,7 +42,7 @@ export default function ItemStatus({ itemInfo, onClose }: ItemStatusProps) {
                 </span>{" "}
                 <b>
                   {(
-                    itemInfo?.info.level[0]?.[key as keyof GameConfig] ?? 0
+                    itemInfo?.info.level[itemInfo.level ?? 0]?.[key as keyof GameConfig] ?? 0
                   ).toLocaleString()}
                 </b>
               </p>

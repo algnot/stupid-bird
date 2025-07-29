@@ -12,20 +12,24 @@ import {
   useEffect,
   useState,
 } from "react";
+import { useFullLoadingContext } from "./full-loading-provider";
 
 interface HelperContextType {
   backendClient: BackendClient;
   userData: UserType;
+  setFullLoading: (value: boolean) => void;
 }
 
 const HelperContext = createContext<() => HelperContextType>(() => {
   return {
     backendClient: new BackendClient(),
     userData: initUserType,
+    setFullLoading: () => {},
   };
 });
 
 export function HelperProvider({ children }: { children: ReactNode }) {
+  const setFullLoading = useFullLoadingContext();
   const [userData, setUserData] = useState<UserType>(initUserType);
   const { backendClient } = useHelperContext()();
 
@@ -35,6 +39,7 @@ export function HelperProvider({ children }: { children: ReactNode }) {
 
   const initLiff = async () => {
     try {
+      setFullLoading(true);
       await liff.init({
         liffId: process.env.NEXT_PUBLIC_LINE_LIFF_ID ?? "",
       });
@@ -49,6 +54,7 @@ export function HelperProvider({ children }: { children: ReactNode }) {
         pictureUrl: profile?.pictureUrl ?? "",
         displayName: profile.displayName,
       });
+      setFullLoading(false);
 
       if (isErrorResponse(response)) {
         return;
@@ -63,6 +69,7 @@ export function HelperProvider({ children }: { children: ReactNode }) {
     () => ({
       backendClient: new BackendClient(),
       userData,
+      setFullLoading,
     }),
     [userData],
   );
