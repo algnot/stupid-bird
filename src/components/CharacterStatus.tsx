@@ -35,7 +35,7 @@ const GROUPED_KEYS: Record<string, (keyof GameConfig)[]> = {
     "MIN_PIPE_INTERVAL",
   ],
   ความเร็ว: ["INITIAL_SPEED", "INCRESE_SPEED", "MAX_SPEED"],
-  แรงโน้มถ่วง: ["GRAVITY", "MAX_SPEED"],
+  แรงโน้มถ่วง: ["GRAVITY", "GRAVITY_TIME"],
   คะแนน: ["SECONDE_PER_SCORE", "INCRESE_SCORE_PER_SECONDE", "COIN_PER_CLICK"],
 };
 
