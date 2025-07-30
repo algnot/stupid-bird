@@ -7,11 +7,36 @@ interface ItemStatusProps {
   onClose?: () => void;
 }
 
-export default function ItemStatus({ itemInfo, onClose }: ItemStatusProps) {
-  const gameConfig = itemInfo?.info.level[itemInfo.level ?? 0];
-  const filteredKeys = Object.keys(gameConfig ?? {}).filter(
-    (key) => (gameConfig?.[key as keyof GameConfig] ?? 0) !== 0,
+const GROUPED_KEYS: Record<string, (keyof GameConfig)[]> = {
+  สถานะตัวละคร: [
+    "BIRD_SIZE",
+    "SECONDE_PER_SCORE",
+    "INCRESE_SCORE_PER_SECONDE",
+    "COIN_PER_CLICK",
+    "MULTIPLY_JUMP_HEIGHT",
+  ],
+  ค่าเริ่มต้น: ["INITIAL_SPEED", "INITIAL_PIPE_GAP", "INITIAL_PIPE_INTERVAL"],
+  ดีบัพ: [
+    "INTERVAL_CHANGE_DIFFICULTY",
+    "INCRESE_SPEED",
+    "DECRESE_PIPE_GAP_INTERVAL",
+    "DECRESE_PIPE_INTERVAL",
+  ],
+  ค่าต่ำสุด: ["MAX_SPEED", "MIN_PIPE_GAP", "MIN_PIPE_INTERVAL"],
+  แรงโน้มถ่วง: ["GRAVITY", "GRAVITY_TIME"],
+};
+
+function renderValue(key: keyof GameConfig, value: number) {
+  return (
+    <p key={key} className="text-[#444] mb-1">
+      {gameConfigLabelToLabel(key)} <b>{value.toLocaleString()}</b>
+    </p>
   );
+}
+
+export default function ItemStatus({ itemInfo, onClose }: ItemStatusProps) {
+  const level = itemInfo?.level ?? 0;
+  const gameConfig = itemInfo?.info.level[level];
 
   return (
     <div className="absolute inset-0 bg-[#00000055] bg-opacity-50 flex items-center justify-center z-50 px-2">
@@ -23,7 +48,7 @@ export default function ItemStatus({ itemInfo, onClose }: ItemStatusProps) {
           ×
         </button>
         <div className="text-md font-bold text-[#345b95] mb-4">
-          {itemInfo?.info.name.th ?? ""} Lv. {itemInfo?.level ?? 0}
+          {itemInfo?.info.name.th ?? ""} Lv. {level}
         </div>
         <div className="flex justify-center mb-4">
           <img
@@ -33,21 +58,26 @@ export default function ItemStatus({ itemInfo, onClose }: ItemStatusProps) {
           />
         </div>
 
-        {filteredKeys.length > 0 && (
-          <div className="text-[#444] text-sm space-y-1">
-            {filteredKeys.map((key) => (
-              <p key={key}>
-                <span className="font-medium">
-                  {gameConfigLabelToLabel(key as keyof GameConfig)}:
-                </span>{" "}
-                <b>
-                  {(
-                    itemInfo?.info.level[itemInfo.level ?? 0]?.[key as keyof GameConfig] ?? 0
-                  ).toLocaleString()}
-                </b>
-              </p>
-            ))}
-          </div>
+        {gameConfig && (
+          <>
+            {Object.entries(GROUPED_KEYS).map(([section, keys]) => {
+              const hasAny = keys.some(
+                (key) => gameConfig[key] && gameConfig[key] !== 0,
+              );
+              if (!hasAny) return null;
+
+              return (
+                <div key={section} className="mb-3">
+                  <b className="text-[#444]">{section}</b>
+                  {keys.map((key) =>
+                    gameConfig[key] && gameConfig[key] !== 0
+                      ? renderValue(key, gameConfig[key] as number)
+                      : null,
+                  )}
+                </div>
+              );
+            })}
+          </>
         )}
       </div>
     </div>
