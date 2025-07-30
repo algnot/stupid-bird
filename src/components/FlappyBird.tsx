@@ -1,9 +1,11 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+"use client";
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
 "use client";
 import { GameConfig } from "@/type/users";
 import React, { useState, useEffect } from "react";
+import { useHelperContext } from "./providers/helper-provider";
+import { isErrorResponse } from "@/type/payload";
 
 interface Pipe {
   left: number;
@@ -31,9 +33,11 @@ export default function FlappyBird({
   GRAVITY_TIME,
   MULTIPLY_JUMP_HEIGHT,
   SECONDE_PER_SCORE,
-  INCRESE_SECONDE,
+  INCRESE_SCORE_PER_SECONDE,
   CHARACTER_IMAGE,
+  COIN_PER_CLICK,
 }: GameConfig) {
+  const { setFullLoading, backendClient, userData } = useHelperContext()();
   const [gameHeight, setGameHeight] = useState<number>(600);
   const [birdPosition, setBirdPosition] = useState<number>(300);
   const [pipes, setPipes] = useState<Pipe[]>([]);
@@ -41,6 +45,7 @@ export default function FlappyBird({
   const [score, setScore] = useState<number>(0);
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
   const [birdAngle, setBirdAngle] = useState<number>(0);
+  const [coin, setCoin] = useState<number>(0);
 
   const [pipeGap, setPipeGap] = useState<number>(INITIAL_PIPE_GAP);
   const [pipeInterval, setPipeInterval] = useState<number>(
@@ -48,17 +53,7 @@ export default function FlappyBird({
   );
   const [pipeSpeed, setPipeSpeed] = useState<number>(INITIAL_SPEED);
 
-  const restartGame = (): void => {
-    setBirdPosition(gameHeight / 2);
-    setPipes([]);
-    setScore(0);
-    setIsGameOver(false);
-    setGameStarted(false);
-    setPipeGap(INITIAL_PIPE_GAP);
-    setPipeInterval(INITIAL_PIPE_INTERVAL);
-    setPipeSpeed(INITIAL_SPEED);
-  };
-
+  // handler difficulty
   useEffect(() => {
     if (gameStarted && !isGameOver) {
       const difficultyInterval = setInterval(() => {
@@ -79,6 +74,7 @@ export default function FlappyBird({
     setBirdPosition(window.innerHeight / 2);
   }, []);
 
+  // handler gravity
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (gameStarted && !isGameOver) {
@@ -89,6 +85,7 @@ export default function FlappyBird({
     return () => clearInterval(interval);
   }, [gameStarted, isGameOver]);
 
+  // handler generate pipe
   useEffect(() => {
     if (!gameStarted || isGameOver) return;
 
@@ -110,29 +107,7 @@ export default function FlappyBird({
     return () => clearInterval(intervalId);
   }, [gameStarted, isGameOver, gameHeight, pipeGap, pipeInterval]);
 
-  useEffect(() => {
-    let moveInterval: NodeJS.Timeout;
-    if (gameStarted && !isGameOver) {
-      moveInterval = setInterval(() => {
-        setPipes((oldPipes) =>
-          oldPipes
-            .map((pipe) => ({ ...pipe, left: pipe.left - 5 }))
-            .filter((pipe) => pipe.left + PIPE_WIDTH > 0),
-        );
-      }, 30);
-    }
-    return () => clearInterval(moveInterval);
-  }, [gameStarted, isGameOver, pipeSpeed]);
-
-  useEffect(() => {
-    if (!isGameOver && gameStarted) {
-      const angleInterval = setInterval(() => {
-        setBirdAngle((angle) => Math.min(angle + 15, 35));
-      }, 100);
-      return () => clearInterval(angleInterval);
-    }
-  }, [gameStarted, isGameOver]);
-
+  // handler collistion
   useEffect(() => {
     pipes.forEach((pipe) => {
       const pipeBottomY = pipe.height + pipe.gap;
@@ -156,49 +131,17 @@ export default function FlappyBird({
     }
   }, [pipes, birdPosition, gameHeight]);
 
-  const handleJump = (): void => {
-    if (!gameStarted) {
-      setGameStarted(true);
-    }
-    if (!isGameOver) {
-      const jumpHeight = window.innerHeight * MULTIPLY_JUMP_HEIGHT;
-      setBirdPosition((pos) => Math.max(0, pos - jumpHeight));
-      setBirdAngle(-30);
-    }
-  };
-
-  const endGame = (): void => {
-    setIsGameOver(true);
-    setGameStarted(false);
-  };
-
+  // handler game state
   useEffect(() => {
     if (gameStarted && !isGameOver) {
       const interval = setInterval(() => {
-        console.log({
-          INTERVAL_CHANGE_DIFFICULTY,
-          INITIAL_PIPE_GAP,
-          MIN_PIPE_GAP,
-          DECRESE_PIPE_GAP_INTERVAL,
-          INITIAL_PIPE_INTERVAL,
-          DECRESE_PIPE_INTERVAL,
-          MIN_PIPE_INTERVAL,
-          INITIAL_SPEED,
-          INCRESE_SPEED,
-          MAX_SPEED,
-          BIRD_SIZE,
-          GRAVITY,
-          GRAVITY_TIME,
-          MULTIPLY_JUMP_HEIGHT,
-          SECONDE_PER_SCORE,
-          INCRESE_SECONDE,
-        });
-        setScore((score) => score + INCRESE_SECONDE);
+        setScore((score) => score + INCRESE_SCORE_PER_SECONDE);
       }, SECONDE_PER_SCORE);
       return () => clearInterval(interval);
     }
   }, [gameStarted, isGameOver]);
 
+  // handler click
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent): void => {
       if (e.code === "Space" && !isGameOver) {
@@ -209,31 +152,106 @@ export default function FlappyBird({
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [isGameOver]);
 
+  // handler move
+  useEffect(() => {
+    let moveInterval: NodeJS.Timeout;
+    if (gameStarted && !isGameOver) {
+      moveInterval = setInterval(() => {
+        setPipes((oldPipes) =>
+          oldPipes
+            .map((pipe) => ({ ...pipe, left: pipe.left - 5 }))
+            .filter((pipe) => pipe.left + PIPE_WIDTH > 0),
+        );
+      }, 30);
+    }
+    return () => clearInterval(moveInterval);
+  }, [gameStarted, isGameOver, pipeSpeed]);
+
+  useEffect(() => {
+    if (!isGameOver && gameStarted) {
+      const angleInterval = setInterval(() => {
+        setBirdAngle((angle) => Math.min(angle + 15, 35));
+      }, 100);
+      return () => clearInterval(angleInterval);
+    }
+  }, [gameStarted, isGameOver]);
+
+  const handleJump = (): void => {
+    if (!gameStarted) {
+      setGameStarted(true);
+    }
+    if (!isGameOver) {
+      const jumpHeight = window.innerHeight * MULTIPLY_JUMP_HEIGHT;
+      setCoin((coin) => coin + COIN_PER_CLICK);
+      setBirdPosition((pos) => Math.max(0, pos - jumpHeight));
+      setBirdAngle(-30);
+    }
+  };
+
+  const endGame = async () => {
+    setIsGameOver(true);
+    setGameStarted(false);
+
+    setFullLoading(true);
+    const response = await backendClient.insertGameLog({
+      userId: userData.userId,
+      coin,
+      point: score,
+      gameConfig: {
+        INTERVAL_CHANGE_DIFFICULTY,
+        INITIAL_PIPE_GAP,
+        MIN_PIPE_GAP,
+        DECRESE_PIPE_GAP_INTERVAL,
+        INITIAL_PIPE_INTERVAL,
+        DECRESE_PIPE_INTERVAL,
+        MIN_PIPE_INTERVAL,
+        INITIAL_SPEED,
+        INCRESE_SPEED,
+        MAX_SPEED,
+        BIRD_SIZE,
+        GRAVITY,
+        GRAVITY_TIME,
+        MULTIPLY_JUMP_HEIGHT,
+        SECONDE_PER_SCORE,
+        INCRESE_SCORE_PER_SECONDE,
+        CHARACTER_IMAGE,
+        COIN_PER_CLICK,
+      },
+    });
+
+    if (isErrorResponse(response)) {
+      window.location.href = "/";
+    }
+    setFullLoading(false);
+  };
+
   return (
     <div onClick={handleJump} style={{ height: gameHeight }}>
-      <div
-        className="absolute z-10 pointer-events-none"
-        style={{
-          left: 50,
-          top: birdPosition,
-          width: BIRD_SIZE,
-          height: BIRD_SIZE,
-        }}
-      >
-        <img
-          src={CHARACTER_IMAGE}
-          alt="bird"
-          className="absolute"
+      {CHARACTER_IMAGE && (
+        <div
+          className="absolute z-10 pointer-events-none"
           style={{
-            width: BIRD_SIZE * 1.25,
-            height: BIRD_SIZE * 1.25,
-            left: -BIRD_SIZE * 0.25,
-            top: -BIRD_SIZE * 0.25,
-            transform: `rotate(${birdAngle}deg)`,
-            transition: "transform 0.2s ease-out",
+            left: 50,
+            top: birdPosition,
+            width: BIRD_SIZE,
+            height: BIRD_SIZE,
           }}
-        />
-      </div>
+        >
+          <img
+            src={CHARACTER_IMAGE}
+            alt="bird"
+            className="absolute"
+            style={{
+              width: BIRD_SIZE * 1.25,
+              height: BIRD_SIZE * 1.25,
+              left: -BIRD_SIZE * 0.25,
+              top: -BIRD_SIZE * 0.25,
+              transform: `rotate(${birdAngle}deg)`,
+              transition: "transform 0.2s ease-out",
+            }}
+          />
+        </div>
+      )}
 
       {pipes.map((pipe, index) => (
         <React.Fragment key={index}>
@@ -310,22 +328,38 @@ export default function FlappyBird({
         </React.Fragment>
       ))}
 
-      <div className="absolute top-2 left-2 text-white font-bold text-2xl drop-shadow-[1px_1px_2px_rgba(0,0,0,0.8)]">
-        Score: {score}
+      <div className="absolute top-4 left-4 text-white font-bold text-2xl drop-shadow-[1px_1px_1px_rgba(0,0,0,0.8)]">
+        <div className="flex gap-1 items-center">
+          <img className="w-[34px] h-[34px]" src="/feather.png" alt="father" />
+          {score.toLocaleString()}
+        </div>
+        <div className="flex gap-2 items-center mt-1">
+          <img className="w-[30px] h-[30px]" src="/coin.png" alt="father" />
+          {coin.toLocaleString()}
+        </div>
       </div>
 
       {isGameOver && (
-        <div className="absolute min-w-[250px] top-[50%] left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-black p-5 rounded-lg text-center">
-          <div className="text-2xl text-[#345b95]">จบเกม</div>
-          <div className="mt-2">
-            คะแนน <b>{score}</b>
+        <div className="absolute min-w-[250px] top-[50%] left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-black p-5 rounded-lg">
+          <div className="text-2xl text-[#345b95] text-center">Game Over</div>
+          <div className="mt-4 flex gap-1">
+            <img
+              className="w-[34px] h-[34px]"
+              src="/feather.png"
+              alt="father"
+            />
+            <b>{score.toLocaleString()}</b>
+          </div>
+          <div className="mt-2 flex gap-2">
+            <img className="w-[30px] h-[30px]" src="/coin.png" alt="coin" />
+            <b>{coin.toLocaleString()}</b>
           </div>
 
           <button
             onClick={() => (window.location.href = "/")}
-            className="px-4 mt-4 bg-[#fff9d9] hover:bg-[#fff7c7] cursor-pointer border-[#815230] text-[#815230] border-2 p-1 rounded-sm"
+            className="px-4 mt-4 bg-[#fff9d9] w-full hover:bg-[#fff7c7] cursor-pointer border-[#815230] text-[#815230] border-2 p-1 rounded-sm"
           >
-            ไปต่อ
+            Continue
           </button>
         </div>
       )}

@@ -1,5 +1,5 @@
 import { ErrorResponse } from '@/type/payload';
-import { GetOrCreateUser, GetUserStatusResponse, initUserType, UserType } from '@/type/users';
+import { GetOrCreateUser, GetScoreBoardResponse, GetUserStatusResponse, initUserType, InsertGameLogRequest, InsertGameLogResponse, UserType } from '@/type/users';
 import axios, { AxiosInstance } from "axios";
 
 export class BackendClient {
@@ -14,7 +14,7 @@ export class BackendClient {
             const response = await this.client.post("/api/user", payload);
             return response.data;
         } catch (e) {
-            console.error("Failed to fetch user info:", e);
+            console.error("Failed to fetch", e);
             return initUserType;
         }
     }
@@ -26,9 +26,33 @@ export class BackendClient {
             });
             return response.data;
         } catch (e) {
-            console.error("Failed to fetch user info:", e);
+            console.error("Failed to fetch", e);
             return {
                 "error": "cannot get user status"
+            };
+        }
+    }
+
+    async insertGameLog(payload: InsertGameLogRequest): Promise<InsertGameLogResponse | ErrorResponse> {
+        try {
+            const response = await this.client.post("/api/game-log", payload);
+            return response.data;
+        } catch (e) {
+            console.error("Failed to fetch", e);
+            return {
+                "error": "cannot insert game log"
+            };
+        }
+    }
+
+    async GetScoreBoard(): Promise<GetScoreBoardResponse | ErrorResponse> {
+        try {
+            const response = await this.client.get("/api/score-board");
+            return response.data;
+        } catch (e) {
+            console.error("Failed to fetch", e);
+            return {
+                "error": "cannot insert game log"
             };
         }
     }

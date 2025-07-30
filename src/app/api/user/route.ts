@@ -19,20 +19,10 @@ export async function POST(req: Request) {
             });
 
             user = await db.collection('users').findOne({ _id: insertResult.insertedId });
-        } else {
-            await db.collection('users').updateOne({ userId: userId }, {
-                $set: {
-                    userId,
-                    displayName,
-                    pictureUrl
-                }
-            });
-
-            user = await db.collection('users').findOne({ userId: userId });
-        }
+        } 
 
         let items = await db.collection('items').aggregate([
-            { $match: { userId: userId } },
+            { $match: { userId: userId, isInstall: true } },
             {
                 $lookup: {
                     from: 'items-info',
@@ -77,7 +67,7 @@ export async function POST(req: Request) {
 
         const installItems = items.filter((item) => item.isInstall);
 
-        return NextResponse.json({ ...user, installItems, items });
+        return NextResponse.json({ ...user, installItems });
     } catch (error) {
         return NextResponse.json({ error: error }, { status: 500 });
     }

@@ -30,7 +30,8 @@ export interface GameConfig {
 
     // score
     SECONDE_PER_SCORE: number;
-    INCRESE_SECONDE: number;
+    INCRESE_SCORE_PER_SECONDE: number;
+    COIN_PER_CLICK: number;
 
     CHARACTER_IMAGE?: string;
 }
@@ -49,9 +50,10 @@ const gameConfigLabelMap: Partial<Record<keyof GameConfig, string>> = {
     GRAVITY: "แรงโน้มถ่วง",
     GRAVITY_TIME: "เวลาแรงโน้มถ่วง",
     SECONDE_PER_SCORE: "รับคะแนนทุก ๆ ",
-    INCRESE_SECONDE: "จำนวนคะแนนที่ได้รับ",
+    INCRESE_SCORE_PER_SECONDE: "จำนวนคะแนนที่ได้รับ",
     INTERVAL_CHANGE_DIFFICULTY: "ช่วงเวลาเปลี่ยนความยาก",
     MULTIPLY_JUMP_HEIGHT: "คูณความสูงในการกระโดด",
+    COIN_PER_CLICK: "จำนวนเหรียญที่ได้ต่อคลิก",
 };
 
 export function gameConfigLabelToLabel(key: keyof GameConfig): string {
@@ -84,7 +86,6 @@ export interface UserType {
     createdAt: string;
     coin?: number;
     daimond?: number;
-    items: Item[];
     installItems: Item[];
 }
 
@@ -96,7 +97,6 @@ export const initUserType: UserType = {
     createdAt: "",
     coin: 0,
     daimond: 0,
-    items: [],
     installItems: [],
 }
 
@@ -109,4 +109,27 @@ export interface GetOrCreateUser {
 export interface GetUserStatusResponse {
     status: GameConfig;
     character: Item;
+}
+
+export interface InsertGameLogRequest {
+    userId: string;
+    point: number;
+    coin: number;
+    gameConfig: GameConfig;
+}
+
+export interface InsertGameLogResponse {
+    status: boolean;
+}
+
+export interface ScoreBoard {
+    bestPoint: number;
+    bestCoin: number;
+    userId: string;
+    displayName: string;
+    pictureUrl: string;
+}
+
+export interface GetScoreBoardResponse {
+    data: ScoreBoard[];
 }

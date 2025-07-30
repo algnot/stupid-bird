@@ -36,7 +36,7 @@ const GROUPED_KEYS: Record<string, (keyof GameConfig)[]> = {
   ],
   ความเร็ว: ["INITIAL_SPEED", "INCRESE_SPEED", "MAX_SPEED"],
   แรงโน้มถ่วง: ["GRAVITY", "MAX_SPEED"],
-  คะแนน: ["SECONDE_PER_SCORE", "INCRESE_SECONDE"],
+  คะแนน: ["SECONDE_PER_SCORE", "INCRESE_SCORE_PER_SECONDE", "COIN_PER_CLICK"],
 };
 
 export default function CharacterStatus({
@@ -45,7 +45,7 @@ export default function CharacterStatus({
   onClose,
 }: StatusProps) {
   return (
-    <div className="absolute inset-0 bg-[#00000055] bg-opacity-50 flex items-center justify-center z-50">
+    <div className="absolute inset-0 bg-[#00000055] bg-opacity-50 flex items-center justify-center z-50 px-2">
       <div className="bg-[#fff9d9] p-6 rounded-xl shadow-lg w-[400px] relative border-[#815230] border-2">
         <button
           className="absolute top-2 right-3 text-red-500 text-2xl font-bold cursor-pointer"
