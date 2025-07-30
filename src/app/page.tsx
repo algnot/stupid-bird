@@ -101,7 +101,7 @@ export default function Page() {
               <img
                 src={hat.info.image}
                 alt={hat.info.name.en}
-                className="absolute top-[-55px] z-10 w-[100px] h-[100px]"
+                className="absolute top-[-40px] z-10 w-[100px] h-[100px]"
               />
             )}
 
