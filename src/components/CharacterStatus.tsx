@@ -43,9 +43,9 @@ export default function CharacterStatus({
 }: StatusProps) {
   return (
     <div className="absolute inset-0 bg-[#00000055] bg-opacity-50 flex items-center justify-center z-50 px-2">
-      <div className="bg-[#fff9d9] p-6 rounded-xl shadow-lg relative border-[#815230] border-2 max-w-[400px] max-h-[80vh] overflow-auto">
+      <div className="bg-[#fff9d9] p-6 rounded-xl shadow-lg relative border-[#815230] border-2 max-w-[500px] max-h-[80vh] overflow-auto">
         <button
-          className="absolute top-2 right-3 text-red-500 text-md font-bold cursor-pointer"
+          className="absolute top-2 right-3 text-red-500 text-2xl text-md font-bold cursor-pointer"
           onClick={onClose}
         >
           ×
