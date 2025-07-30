@@ -25,18 +25,15 @@ function renderDiff(key: keyof GameConfig, base?: number, add?: number) {
 }
 
 const GROUPED_KEYS: Record<string, (keyof GameConfig)[]> = {
-  สถานะตัวละคร: ["BIRD_SIZE"],
-  ท่อ: [
+  สถานะตัวละคร: ["BIRD_SIZE", "SECONDE_PER_SCORE", "INCRESE_SCORE_PER_SECONDE", "COIN_PER_CLICK", "MULTIPLY_JUMP_HEIGHT"],
+  ค่าเริ่มต้น : [
+    "INITIAL_SPEED",
     "INITIAL_PIPE_GAP",
-    "DECRESE_PIPE_GAP_INTERVAL",
-    "MIN_PIPE_GAP",
-    "INITIAL_PIPE_INTERVAL",
-    "DECRESE_PIPE_INTERVAL",
-    "MIN_PIPE_INTERVAL",
+    "INITIAL_PIPE_INTERVAL"
   ],
-  ความเร็ว: ["INITIAL_SPEED", "INCRESE_SPEED", "MAX_SPEED"],
+  ดีบัพ: ["INTERVAL_CHANGE_DIFFICULTY", "INCRESE_SPEED", "DECRESE_PIPE_GAP_INTERVAL", "DECRESE_PIPE_INTERVAL"],
+  ค่าต่ำสุด: ["MAX_SPEED", "MIN_PIPE_GAP", "MIN_PIPE_INTERVAL"],
   แรงโน้มถ่วง: ["GRAVITY", "GRAVITY_TIME"],
-  คะแนน: ["SECONDE_PER_SCORE", "INCRESE_SCORE_PER_SECONDE", "COIN_PER_CLICK"],
 };
 
 export default function CharacterStatus({
