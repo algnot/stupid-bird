@@ -133,3 +133,7 @@ export interface ScoreBoard {
 export interface GetScoreBoardResponse {
     data: ScoreBoard[];
 }
+
+export interface GetUserItemsResponse {
+    installItems: Item[];
+}

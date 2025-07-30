@@ -65,9 +65,7 @@ export async function POST(req: Request) {
             ]).toArray();
         }
 
-        const installItems = items.filter((item) => item.isInstall);
-
-        return NextResponse.json({ ...user, installItems });
+        return NextResponse.json({ ...user, installItems: items });
     } catch (error) {
         return NextResponse.json({ error: error }, { status: 500 });
     }

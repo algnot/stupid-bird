@@ -1,5 +1,5 @@
 import { ErrorResponse } from '@/type/payload';
-import { GetOrCreateUser, GetScoreBoardResponse, GetUserStatusResponse, initUserType, InsertGameLogRequest, InsertGameLogResponse, UserType } from '@/type/users';
+import { GetOrCreateUser, GetScoreBoardResponse, GetUserItemsResponse, GetUserStatusResponse, initUserType, InsertGameLogRequest, InsertGameLogResponse, UserType } from '@/type/users';
 import axios, { AxiosInstance } from "axios";
 
 export class BackendClient {
@@ -48,6 +48,20 @@ export class BackendClient {
     async GetScoreBoard(): Promise<GetScoreBoardResponse | ErrorResponse> {
         try {
             const response = await this.client.get("/api/score-board");
+            return response.data;
+        } catch (e) {
+            console.error("Failed to fetch", e);
+            return {
+                "error": "cannot insert game log"
+            };
+        }
+    }
+
+    async GetUserItems(userId: string): Promise<GetUserItemsResponse | ErrorResponse> {
+        try {
+            const response = await this.client.post("/api/user-items", {
+                userId
+            });
             return response.data;
         } catch (e) {
             console.error("Failed to fetch", e);
