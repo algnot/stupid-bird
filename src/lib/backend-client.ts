@@ -105,9 +105,13 @@ export class BackendClient {
         }
     }
 
-    async GetSaleItems(): Promise<GetItemShopResponse | ErrorResponse> {
+    async GetSaleItems(isDev: boolean): Promise<GetItemShopResponse | ErrorResponse> {
         try {
-            const response = await this.client.get("/api/shop");
+            let url = "/api/shop";
+            if (isDev) {
+                url += "?isDev=true"
+            }
+            const response = await this.client.get(url);
             return response.data;
         } catch (e) {
             return handlerError(e, this.setAlert);

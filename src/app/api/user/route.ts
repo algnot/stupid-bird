@@ -15,7 +15,8 @@ export async function POST(req: Request) {
                 pictureUrl,
                 createdAt: new Date(),
                 coin: 200,
-                daimond: 0
+                daimond: 0,
+                isDev: false
             });
 
             user = await db.collection('users').findOne({ _id: insertResult.insertedId });

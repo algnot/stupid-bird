@@ -1,12 +1,19 @@
 import { NextResponse } from 'next/server';
 import getDatabase from '@/lib/mongodb';
 
-export async function GET() {
+export async function GET(req: Request) {
     try {
+        const { searchParams } = new URL(req.url);
         const db = await getDatabase();
+        const isDev = searchParams.get('isDev') === "true";
+        let filter: Record<string, unknown> = { isSale: true };
+
+        if (isDev) {
+            filter = {}
+        }
 
         const items = await db.collection("shop").aggregate([
-            { $match: { isSale: true } },
+            { $match: filter },
             {
                 $lookup: {
                     from: "items-info",

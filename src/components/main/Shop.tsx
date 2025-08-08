@@ -27,7 +27,7 @@ export default function Shop() {
   }, []);
 
   const fetchData = async () => {
-    const response = await backendClient.GetSaleItems();
+    const response = await backendClient.GetSaleItems(userData.isDev ?? false);
     if (isErrorResponse(response)) {
       return;
     }

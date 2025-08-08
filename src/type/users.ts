@@ -87,6 +87,7 @@ export interface UserType {
     createdAt: string;
     coin?: number;
     daimond?: number;
+    isDev: boolean;
     installItems: Item[];
 }
 
@@ -99,6 +100,7 @@ export const initUserType: UserType = {
     coin: 0,
     daimond: 0,
     installItems: [],
+    isDev: false,
 }
 
 export interface GetOrCreateUser {
