@@ -8,9 +8,9 @@ import TopBar from "@/components/TopBar";
 import React, { useEffect } from "react";
 
 export default function Page() {
-  const { userData, router } = useHelperContext()();
+  const { router } = useHelperContext()();
 
-  useEffect(() => {}, [userData, router]);
+  useEffect(() => {}, [router]);
 
   return (
     <div

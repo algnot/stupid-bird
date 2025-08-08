@@ -77,6 +77,7 @@ export interface Item {
     level: number;
     isInstall: boolean;
     info: ItemInfo;
+    qty: number;
 }
 
 export interface UserType {
