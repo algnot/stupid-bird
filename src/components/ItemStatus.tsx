@@ -52,7 +52,7 @@ export default function ItemStatus({ itemInfo, onClose }: ItemStatusProps) {
         </div>
         <div className="flex justify-center mb-4">
           <img
-            className="w-[160px] h-[160px]"
+            className="w-[190px] h-[160px]"
             src={itemInfo?.info.image}
             alt={itemInfo?.info.name.en}
           />

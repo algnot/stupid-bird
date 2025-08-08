@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useHelperContext } from "../providers/helper-provider";
 import { isErrorResponse } from "@/type/payload";
-import { ItemShop } from "@/type/shop";
+import { convertItemInfoToItem, ItemShop } from "@/type/shop";
 
 export default function Shop() {
   const [selectedTab, setSelectedTab] = useState<"character" | "hat">(
@@ -11,7 +11,7 @@ export default function Shop() {
   );
   const [items, setItems] = useState<ItemShop[]>([]);
 
-  const { backendClient, userData } = useHelperContext()();
+  const { backendClient, userData, setShowItemStatus } = useHelperContext()();
 
   useEffect(() => {
     fetchData();
@@ -84,10 +84,15 @@ export default function Shop() {
 
               <img
                 src={item.itemInfo.image ?? ""}
-                className="my-2"
+                className="my-2 cursor-pointer"
                 height={50}
                 width={120}
                 alt={item.itemId}
+                onClick={() =>
+                  setShowItemStatus(
+                    convertItemInfoToItem(userData, item.itemInfo),
+                  )
+                }
               />
 
               {(userData.coin ?? 0) < item.price ? (
