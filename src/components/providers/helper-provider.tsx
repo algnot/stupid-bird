@@ -29,8 +29,8 @@ interface HelperContextType {
   showItemStatus: Item | undefined;
   setShowItemStatus: (item: Item) => void;
   setIsShowScoreBoard: (value: boolean) => void;
-  router: "character" | "shop";
-  setRouter: (value: "character" | "shop") => void;
+  router: "character" | "shop" | "inventory";
+  setRouter: (value: "character" | "shop" | "inventory") => void;
 }
 
 const HelperContext = createContext<() => HelperContextType>(() => {
@@ -58,7 +58,9 @@ export function HelperProvider({ children }: { children: ReactNode }) {
   const [showHatStatus, setShowHatStatus] = useState<Item | undefined>();
   const [showItemStatus, setShowItemStatus] = useState<Item | undefined>();
   const [isShowScoreBoard, setIsShowScoreBoard] = useState(false);
-  const [router, setRouter] = useState<"character" | "shop">("character");
+  const [router, setRouter] = useState<"character" | "shop" | "inventory">(
+    "character",
+  );
 
   useEffect(() => {
     initLiff();

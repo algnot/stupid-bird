@@ -56,7 +56,7 @@ export default function Character() {
           <div className="flex gap-2">
             <div
               onClick={() => setShowSummaryCharacterStatus(character, hat)}
-              className="hover:bg-[#ffea80] bg-[#f8da38] border-[#815230] text-[#815230] border-2 rounded-md p-2 font-bold flex justify-center items-center cursor-pointer h-14"
+              className="hover:bg-[#ffea80] bg-[#f8da38] border-[#815230] text-[#815230] border-2 rounded-md p-2 flex justify-center items-center cursor-pointer h-14 gap-1"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
