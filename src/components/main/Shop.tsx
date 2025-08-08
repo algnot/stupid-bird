@@ -158,7 +158,7 @@ export default function Shop() {
                   </div>
                 )}
 
-                {(userData.coin ?? 0) < item.price && !hasItem && (
+                {(userData[item.unit] ?? 0) < item.price && !hasItem && (
                   <div className="flex gap-1 justify-center items-center bg-[#f3bb3f] rounded-sm shadow-md mt-2 border-2 border-black py-2 px-3 text-sm opacity-25">
                     {item.price.toLocaleString()}
                     <img
@@ -169,7 +169,7 @@ export default function Shop() {
                   </div>
                 )}
 
-                {(userData.coin ?? 0) >= item.price && !hasItem && (
+                {(userData[item.unit] ?? 0) >= item.price && !hasItem && (
                   <div
                     onClick={() => onBuyItem(item)}
                     className="flex gap-1 justify-center items-center bg-[#f3bb3f] rounded-sm shadow-md cursor-pointer mt-2 border-2 border-black py-2 px-3 text-sm"
