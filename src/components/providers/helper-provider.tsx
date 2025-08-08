@@ -39,6 +39,7 @@ interface HelperContextType {
   setIsShowScoreBoard: (value: boolean) => void;
   router: "character" | "shop" | "inventory";
   setRouter: (value: "character" | "shop" | "inventory") => void;
+  fetchUser: () => Promise<void>;
 }
 
 const HelperContext = createContext<() => HelperContextType>(() => {
@@ -59,6 +60,7 @@ const HelperContext = createContext<() => HelperContextType>(() => {
     setIsShowScoreBoard: () => {},
     router: "character",
     setRouter: () => {},
+    fetchUser: async () => {},
   };
 });
 
@@ -129,7 +131,8 @@ export function HelperProvider({ children }: { children: ReactNode }) {
       setIsShowScoreBoard,
       router,
       setRouter,
-      setAlert
+      setAlert,
+      fetchUser: initLiff,
     }),
     [userData, router],
   );

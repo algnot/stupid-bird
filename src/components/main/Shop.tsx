@@ -19,6 +19,7 @@ export default function Shop() {
     setShowItemStatus,
     setAlert,
     setFullLoading,
+    fetchUser,
   } = useHelperContext()();
 
   useEffect(() => {
@@ -64,10 +65,27 @@ export default function Shop() {
         setFullLoading(true);
         const response = await backendClient.BuyItem(userData.userId, item._id);
         setFullLoading(false);
+        await fetchUser();
         if (isErrorResponse(response)) {
           return;
         }
-        setAlert("สำเร็จ", "การซื้อของคุณสำเร็จแล้ว", () => {}, false);
+        setAlert(
+          "สำเร็จ",
+          "การซื้อของคุณสำเร็จแล้ว",
+          async () => {
+            setFullLoading(true);
+            const userItemResponse = await backendClient.GetUserItems(
+              userData.userId,
+              "all",
+            );
+            setFullLoading(false);
+            if (isErrorResponse(userItemResponse)) {
+              return;
+            }
+            setUserItems(userItemResponse.items);
+          },
+          false,
+        );
       },
       true,
     );
