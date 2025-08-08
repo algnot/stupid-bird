@@ -21,9 +21,7 @@ export class BackendClient {
 
     async getUserStatus(userId: string): Promise<GetUserStatusResponse | ErrorResponse> {
         try {
-            const response = await this.client.post("/api/user-status", {
-                userId
-            });
+            const response = await this.client.get("/api/user-status?userId=" + userId);
             return response.data;
         } catch (e) {
             console.error("Failed to fetch", e);
@@ -59,9 +57,7 @@ export class BackendClient {
 
     async GetUserItems(userId: string): Promise<GetUserItemsResponse | ErrorResponse> {
         try {
-            const response = await this.client.post("/api/user-items", {
-                userId
-            });
+            const response = await this.client.get("/api/user-items?userId=" + userId);
             return response.data;
         } catch (e) {
             console.error("Failed to fetch", e);
