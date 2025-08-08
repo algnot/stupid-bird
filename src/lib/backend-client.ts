@@ -71,7 +71,7 @@ export class BackendClient {
 
     async getUserStatus(userId: string): Promise<GetUserStatusResponse | ErrorResponse> {
         try {
-            const response = await this.client.get("/api/user-status?userId=" + userId);
+            const response = await this.client.get("/api/user/status?userId=" + userId);
             return response.data;
         } catch (e) {
             return handlerError(e, this.setAlert);
@@ -98,7 +98,7 @@ export class BackendClient {
 
     async GetUserItems(userId: string, isInstall: "true" | "false" | "all"): Promise<GetUserItemsResponse | ErrorResponse> {
         try {
-            const response = await this.client.get("/api/user-items?userId=" + userId + "&isInstall=" + isInstall);
+            const response = await this.client.get("/api/user/items?userId=" + userId + "&isInstall=" + isInstall);
             return response.data;
         } catch (e) {
             return handlerError(e, this.setAlert);
@@ -132,7 +132,7 @@ export class BackendClient {
 
     async installItem(userId: string, itemId: string): Promise<void | ErrorResponse> {
         try {
-            const response = await this.client.post("/api/user-items", {
+            const response = await this.client.post("/api/user/items", {
                 userId,
                 itemId
             });
