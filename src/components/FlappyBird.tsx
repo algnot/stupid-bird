@@ -227,7 +227,7 @@ export default function FlappyBird({
   };
 
   return (
-    <div onClick={handleJump} style={{ height: gameHeight }}>
+    <div onClick={handleJump} style={{ height: gameHeight, backgroundImage: "url('/bg.png')" }}>
       {CHARACTER_IMAGE && (
         <div
           className="absolute z-10 pointer-events-none"
