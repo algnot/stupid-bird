@@ -112,24 +112,6 @@ export default function Inventory() {
         </div>
       )}
 
-      <div className="flex justify-center mt-3 gap-2">
-        {userData.installItems.map((item) => {
-          return (
-            <div
-              key={item._id}
-              className="bg-[#fff9d9] hover:bg-[#fff7c7] cursor-pointer border-[#815230] border-2 p-1 rounded-sm"
-              onClick={() => setShowItemStatus(item)}
-            >
-              <img
-                className="w-[30px] h-[30px]"
-                src={item.info.image}
-                alt={item.info.name.en}
-              />
-            </div>
-          );
-        })}
-      </div>
-
       <div className="mt-8">
         <div className="flex justify-center gap-2 bg-[#6c5147] border-y-2 border-[#3c2821] py-3">
           <button
@@ -150,7 +132,7 @@ export default function Inventory() {
           </button>
         </div>
 
-        <div className="bg-[#6c5147] border-b-2 border-[#3c2821] p-4 flex flex-wrap justify-center gap-4 h-[calc(100dvh-470px)] overflow-auto pb-24">
+        <div className="bg-[#6c5147] border-b-2 border-[#3c2821] p-4 flex flex-wrap justify-center gap-4 h-[calc(100dvh-400px)] overflow-auto pb-24">
           {userItems
             .filter((item) => item.info.type === selectedTab)
             .map((item) => {
