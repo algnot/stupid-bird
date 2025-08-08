@@ -86,6 +86,21 @@ export function HelperProvider({ children }: { children: ReactNode }) {
   const initLiff = async () => {
     try {
       setFullLoading(true);
+
+      if (process.env.NEXT_PUBLIC_FORCE_USER_ID) {
+        const response = await backendClient.getOrCreateUser({
+          userId: process.env.NEXT_PUBLIC_FORCE_USER_ID,
+          pictureUrl: "",
+          displayName: "",
+        });
+        setFullLoading(false);
+        if (isErrorResponse(response)) {
+          return;
+        }
+        setUserData(response);
+        return;
+      }
+
       await liff.init({
         liffId: process.env.NEXT_PUBLIC_LINE_LIFF_ID ?? "",
       });

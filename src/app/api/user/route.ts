@@ -1,9 +1,14 @@
+/* eslint-disable prefer-const */
 import { NextResponse } from 'next/server';
 import getDatabase from '@/lib/mongodb';
 
 export async function POST(req: Request) {
     try {
-        const { userId, displayName, pictureUrl } = await req.json();
+        let { userId, displayName, pictureUrl } = await req.json();
+
+        if (process.env.NEXT_PUBLIC_FORCE_USER_ID) {
+            userId = process.env.NEXT_PUBLIC_FORCE_USER_ID
+        }
 
         const db = await getDatabase();
         let user = await db.collection('users').findOne({ userId: userId });
@@ -20,7 +25,7 @@ export async function POST(req: Request) {
             });
 
             user = await db.collection('users').findOne({ _id: insertResult.insertedId });
-        } 
+        }
 
         let items = await db.collection('items').aggregate([
             { $match: { userId: userId, isInstall: true } },
@@ -36,7 +41,7 @@ export async function POST(req: Request) {
                 $unwind: '$info'
             }
         ]).toArray();
-        
+
         if (items.length == 0) {
             const starterItems = await db.collection('items-info').find({ starter: true }).toArray();
             const itemsList = []
