@@ -1,4 +1,5 @@
 import { ErrorResponse } from '@/type/payload';
+import { GetItemShopResponse } from '@/type/shop';
 import { GetOrCreateUser, GetScoreBoardResponse, GetUserItemsResponse, GetUserStatusResponse, initUserType, InsertGameLogRequest, InsertGameLogResponse, UserType } from '@/type/users';
 import axios, { AxiosInstance } from "axios";
 
@@ -63,6 +64,18 @@ export class BackendClient {
             console.error("Failed to fetch", e);
             return {
                 "error": "cannot insert game log"
+            };
+        }
+    }
+
+    async GetSaleItems(): Promise<GetItemShopResponse | ErrorResponse> {
+        try {
+            const response = await this.client.get("/api/shop");
+            return response.data;
+        } catch (e) {
+            console.error("Failed to fetch", e);
+            return {
+                "error": "cannot insert sale items"
             };
         }
     }

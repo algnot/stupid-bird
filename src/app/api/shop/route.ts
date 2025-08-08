@@ -5,13 +5,13 @@ export async function GET() {
     try {
         const db = await getDatabase();
 
-        const items = db.collection("shop").aggregate([
+        const items = await db.collection("shop").aggregate([
             { $match: { isSale: true } },
             {
                 $lookup: {
                     from: "items-info",
-                    localField: "_id",
-                    foreignField: "itemId",
+                    localField: "itemId",
+                    foreignField: "_id",
                     as: "itemInfo"
                 }
             },
