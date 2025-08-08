@@ -51,7 +51,7 @@ export default function FlappyBird({
   const [pipeInterval, setPipeInterval] = useState<number>(
     INITIAL_PIPE_INTERVAL,
   );
-  const [pipeSpeed, setPipeSpeed] = useState<number>(INITIAL_SPEED);
+  const [speed, setSpeed] = useState<number>(INITIAL_SPEED);
 
   // handler difficulty
   useEffect(() => {
@@ -60,7 +60,7 @@ export default function FlappyBird({
         setPipeGap((gap) =>
           Math.max(MIN_PIPE_GAP, gap - DECRESE_PIPE_GAP_INTERVAL),
         );
-        setPipeSpeed((speed) => Math.min(MAX_SPEED, speed + INCRESE_SPEED));
+        setSpeed((speed) => Math.min(MAX_SPEED, speed + INCRESE_SPEED));
         setPipeInterval((interval) =>
           Math.max(MIN_PIPE_INTERVAL, interval - DECRESE_PIPE_INTERVAL),
         );
@@ -157,15 +157,16 @@ export default function FlappyBird({
     let moveInterval: NodeJS.Timeout;
     if (gameStarted && !isGameOver) {
       moveInterval = setInterval(() => {
+        // speed
         setPipes((oldPipes) =>
           oldPipes
-            .map((pipe) => ({ ...pipe, left: pipe.left - 5 }))
+            .map((pipe) => ({ ...pipe, left: pipe.left - speed }))
             .filter((pipe) => pipe.left + PIPE_WIDTH > 0),
         );
       }, 30);
     }
     return () => clearInterval(moveInterval);
-  }, [gameStarted, isGameOver, pipeSpeed]);
+  }, [gameStarted, isGameOver, speed]);
 
   useEffect(() => {
     if (!isGameOver && gameStarted) {
