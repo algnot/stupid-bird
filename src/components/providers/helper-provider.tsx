@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import { BackendClient } from "@/lib/backend-client";
@@ -48,7 +49,7 @@ const HelperContext = createContext<() => HelperContextType>(() => {
       action: undefined | (() => void),
       canCancel: boolean,
     ) => {},
-    backendClient: new BackendClient(),
+    backendClient: new BackendClient(() => {}),
     userData: initUserType,
     setFullLoading: () => {},
     showCharacterStatus: undefined,
@@ -118,7 +119,7 @@ export function HelperProvider({ children }: { children: ReactNode }) {
 
   const useHelper = useCallback(
     () => ({
-      backendClient: new BackendClient(),
+      backendClient: new BackendClient(setAlert),
       userData,
       setFullLoading,
       showCharacterStatus,

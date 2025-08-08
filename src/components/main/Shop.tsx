@@ -13,8 +13,13 @@ export default function Shop() {
   const [items, setItems] = useState<ItemShop[]>([]);
   const [userItems, setUserItems] = useState<Item[]>([]);
 
-  const { backendClient, userData, setShowItemStatus, setAlert } =
-    useHelperContext()();
+  const {
+    backendClient,
+    userData,
+    setShowItemStatus,
+    setAlert,
+    setFullLoading,
+  } = useHelperContext()();
 
   useEffect(() => {
     fetchData();
@@ -55,7 +60,15 @@ export default function Shop() {
     setAlert(
       "ยืนยันการซื้อ",
       `คุณต้องการซื้อ ${item.itemInfo.name.th} ราคา ${item.price} ${item.unit}s ใช่หรือไม่?`,
-      () => {},
+      async () => {
+        setFullLoading(true);
+        const response = await backendClient.BuyItem(userData.userId, item._id);
+        setFullLoading(false);
+        if (isErrorResponse(response)) {
+          return;
+        }
+        setAlert("สำเร็จ", "การซื้อของคุณสำเร็จแล้ว", () => {}, false);
+      },
       true,
     );
   };

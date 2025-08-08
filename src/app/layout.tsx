@@ -21,7 +21,7 @@ export default function RootLayout({
     <html lang="th" className={playpenSans.variable}>
       <body>
         <div
-          className={`relative mx-auto select-none bg-[#70c5ce] w-[100vw] md:w-[600px] h-[100vh] overflow-hidden`}
+          className={`relative mx-auto select-none bg-[#70c5ce] w-[100vw] md:w-[600px] h-[100dvh] overflow-hidden`}
         >
           <FullLoadingProvider>
             <AlertDialogProvider>
