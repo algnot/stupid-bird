@@ -56,9 +56,9 @@ export class BackendClient {
         }
     }
 
-    async GetUserItems(userId: string): Promise<GetUserItemsResponse | ErrorResponse> {
+    async GetUserItems(userId: string, isInstall: "true" | "false" | "all"): Promise<GetUserItemsResponse | ErrorResponse> {
         try {
-            const response = await this.client.get("/api/user-items?userId=" + userId);
+            const response = await this.client.get("/api/user-items?userId=" + userId + "&isInstall=" + isInstall);
             return response.data;
         } catch (e) {
             console.error("Failed to fetch", e);

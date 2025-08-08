@@ -45,6 +45,7 @@ export async function POST(req: Request) {
                     itemId: starterItem._id,
                     level: starterItem.startLevel,
                     isInstall: true,
+                    qty: 1,
                 })
             }
             await db.collection('items').insertMany(itemsList);

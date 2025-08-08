@@ -4,14 +4,17 @@ import React, { useEffect, useState } from "react";
 import { useHelperContext } from "../providers/helper-provider";
 import { isErrorResponse } from "@/type/payload";
 import { convertItemInfoToItem, ItemShop } from "@/type/shop";
+import { Item } from "@/type/users";
 
 export default function Shop() {
   const [selectedTab, setSelectedTab] = useState<"character" | "hat">(
     "character",
   );
   const [items, setItems] = useState<ItemShop[]>([]);
+  const [userItems, setUserItems] = useState<Item[]>([]);
 
-  const { backendClient, userData, setShowItemStatus } = useHelperContext()();
+  const { backendClient, userData, setShowItemStatus, setAlert } =
+    useHelperContext()();
 
   useEffect(() => {
     fetchData();
@@ -23,6 +26,16 @@ export default function Shop() {
       return;
     }
     setItems(response.data);
+
+    const userItemResponse = await backendClient.GetUserItems(
+      userData.userId,
+      "all",
+    );
+    if (isErrorResponse(userItemResponse)) {
+      return;
+    }
+
+    setUserItems(userItemResponse.items);
   };
 
   const tabClass = (tab: string) =>
@@ -37,6 +50,15 @@ export default function Shop() {
       }`}
     />
   );
+
+  const onBuyItem = (item: ItemShop) => {
+    setAlert(
+      "ยืนยันการซื้อ",
+      `คุณต้องการซื้อ ${item.itemInfo.name.th} ราคา ${item.price} ${item.unit}s ใช่หรือไม่?`,
+      () => {},
+      true,
+    );
+  };
 
   return (
     <div className="h-[calc(100dvh-170px)]">
@@ -105,7 +127,10 @@ export default function Shop() {
                   />
                 </div>
               ) : (
-                <div className="flex gap-1 justify-center items-center bg-[#f3bb3f] rounded-sm shadow-md cursor-pointer mt-2 border-2 border-black py-2 px-3 text-sm">
+                <div
+                  onClick={() => onBuyItem(item)}
+                  className="flex gap-1 justify-center items-center bg-[#f3bb3f] rounded-sm shadow-md cursor-pointer mt-2 border-2 border-black py-2 px-3 text-sm"
+                >
                   {item.price.toLocaleString()}
                   <img
                     src={item.unit === "coin" ? "/coin.png" : "/daimond.png"}

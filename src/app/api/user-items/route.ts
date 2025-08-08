@@ -5,6 +5,12 @@ export async function GET(req: Request) {
     try {
         const { searchParams } = new URL(req.url);
         const userId = searchParams.get('userId');
+        const isInstall = searchParams.get('isInstall');
+        const filter: Record<string, unknown> = { userId };
+
+        if (isInstall && isInstall !== "all") {
+            filter.isInstall = isInstall === "true";
+        }
 
         if (!userId) {
             return NextResponse.json({ error: 'Missing userId' }, { status: 400 });
@@ -13,7 +19,7 @@ export async function GET(req: Request) {
         const db = await getDatabase();
 
         const items = await db.collection('items').aggregate([
-            { $match: { userId: userId, isInstall: true } },
+            { $match: filter },
             {
                 $lookup: {
                     from: 'items-info',
@@ -27,7 +33,7 @@ export async function GET(req: Request) {
             }
         ]).toArray();
 
-        return NextResponse.json({ installItems: items });
+        return NextResponse.json({ items: items });
     } catch (error) {
         return NextResponse.json({ error: error }, { status: 500 });
     }

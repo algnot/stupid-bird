@@ -17,11 +17,11 @@ const UserItem = ({ userId }: { userId: string }) => {
   }, []);
 
   const getUserItems = async () => {
-    const response = await backendClient.GetUserItems(userId);
+    const response = await backendClient.GetUserItems(userId, "true");
     if (isErrorResponse(response)) {
       return;
     }
-    setItems(response.installItems);
+    setItems(response.items);
   };
 
   return (

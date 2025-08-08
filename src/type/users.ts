@@ -135,5 +135,5 @@ export interface GetScoreBoardResponse {
 }
 
 export interface GetUserItemsResponse {
-    installItems: Item[];
+    items: Item[];
 }

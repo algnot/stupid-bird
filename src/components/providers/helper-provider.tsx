@@ -16,8 +16,15 @@ import { useFullLoadingContext } from "./full-loading-provider";
 import CharacterStatus from "../CharacterStatus";
 import ItemStatus from "../ItemStatus";
 import ScoreBoardContent from "../ScoreBoardContent";
+import { useAlertContext } from "./alert-provider";
 
 interface HelperContextType {
+  setAlert: (
+    title: string,
+    text: string,
+    action: undefined | (() => void),
+    canCancel: boolean,
+  ) => void;
   backendClient: BackendClient;
   userData: UserType;
   setFullLoading: (value: boolean) => void;
@@ -35,6 +42,12 @@ interface HelperContextType {
 
 const HelperContext = createContext<() => HelperContextType>(() => {
   return {
+    setAlert: (
+      title: string,
+      text: string,
+      action: undefined | (() => void),
+      canCancel: boolean,
+    ) => {},
     backendClient: new BackendClient(),
     userData: initUserType,
     setFullLoading: () => {},
@@ -49,6 +62,7 @@ const HelperContext = createContext<() => HelperContextType>(() => {
 });
 
 export function HelperProvider({ children }: { children: ReactNode }) {
+  const setAlert = useAlertContext();
   const setFullLoading = useFullLoadingContext();
   const [userData, setUserData] = useState<UserType>(initUserType);
   const { backendClient } = useHelperContext()();
@@ -114,6 +128,7 @@ export function HelperProvider({ children }: { children: ReactNode }) {
       setIsShowScoreBoard,
       router,
       setRouter,
+      setAlert
     }),
     [userData, router],
   );
