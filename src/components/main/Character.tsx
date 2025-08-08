@@ -32,7 +32,7 @@ export default function Character() {
             onClick={() => setShowSummaryCharacterStatus(character, hat)}
           />
           <div className="text-2xl text-[#345b95] font-bold">
-            {character.info.name.th} Lv. {character.level}
+            {character.info.name.th}
           </div>
           <div className="flex gap-2">
             {userData.installItems.map((item) => {

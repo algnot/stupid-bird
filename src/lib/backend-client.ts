@@ -125,4 +125,16 @@ export class BackendClient {
             return handlerError(e, this.setAlert);
         }
     }
+
+    async installItem(userId: string, itemId: string): Promise<void | ErrorResponse> {
+        try {
+            const response = await this.client.post("/api/user-items", {
+                userId,
+                itemId
+            });
+            return response.data;
+        } catch (e) {
+            return handlerError(e, this.setAlert);
+        }
+    }
 }

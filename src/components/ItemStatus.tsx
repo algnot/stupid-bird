@@ -48,7 +48,7 @@ export default function ItemStatus({ itemInfo, onClose }: ItemStatusProps) {
           ×
         </button>
         <div className="text-md font-bold text-[#345b95] mb-4">
-          {itemInfo?.info.name.th ?? ""} Lv. {level}
+          {itemInfo?.info.name.th ?? ""}
         </div>
         <div className="flex justify-center mb-4">
           <img
