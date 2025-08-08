@@ -29,7 +29,7 @@ export function AlertDialogComponent({
 
   return (
     <div className="fixed inset-0 z-50 backdrop-blur-sm flex items-center justify-center">
-      <div className="bg-[#6c5147] border-4 border-[#3c2821] rounded-2xl p-6 w-[90%] max-w-sm shadow-lg text-white">
+      <div className="bg-bgDefault border-4 border-borderStrong rounded-2xl p-6 w-[90%] max-w-sm shadow-lg text-white">
         <h2 className="text-lg font-bold text-center mb-4">{title}</h2>
 
         <p className="text-sm text-center mb-6">{text}</p>
@@ -38,14 +38,14 @@ export function AlertDialogComponent({
           {canCancel && (
             <button
               onClick={onCancel}
-              className="bg-[#3c2821] hover:bg-[#2a1e19] text-white rounded-lg px-4 py-2 text-sm shadow cursor-pointer"
+              className="bg-borderStrong text-white rounded-lg px-4 py-2 text-sm shadow cursor-pointer"
             >
               ยกเลิก
             </button>
           )}
           <button
             onClick={handleActionClick}
-            className="bg-[#ffd400] hover:bg-[#f3bb3f] text-black rounded-lg px-4 py-2 text-sm shadow cursor-pointer"
+            className="bg-primary hover:bg-bgButton text-black rounded-lg px-4 py-2 text-sm shadow cursor-pointer"
           >
             ตกลง
           </button>
@@ -60,10 +60,10 @@ const AlertContext = createContext(
     title: string,
     text: string,
     action: undefined | (() => void),
-    canCancel: boolean,
+    canCancel: boolean
   ) => {
     return [title, text, action, canCancel];
-  },
+  }
 );
 
 export function AlertDialogProvider({ children }: { children: ReactNode }) {
@@ -77,7 +77,7 @@ export function AlertDialogProvider({ children }: { children: ReactNode }) {
       title: string,
       text: string,
       action: undefined | (() => void),
-      canCancel: boolean,
+      canCancel: boolean
     ) => {
       setTitle(title);
       setText(text);
@@ -85,7 +85,7 @@ export function AlertDialogProvider({ children }: { children: ReactNode }) {
       setCanCancel(canCancel);
       return [title, text, action, canCancel];
     },
-    [],
+    []
   );
 
   const onCancel = () => {

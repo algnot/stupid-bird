@@ -8,7 +8,7 @@ export default function Character() {
   useEffect(() => {}, [userData]);
 
   const character = userData.installItems.find(
-    (item) => item.info.type === "character",
+    (item) => item.info.type === "character"
   );
   const hat = userData.installItems.find((item) => item.info.type === "hat");
 
@@ -31,7 +31,7 @@ export default function Character() {
             alt={character.info.name.en}
             onClick={() => setShowSummaryCharacterStatus(character, hat)}
           />
-          <div className="text-2xl text-[#345b95] font-bold">
+          <div className="text-2xl text-foreground font-bold">
             {character.info.name.th}
           </div>
           <div className="flex gap-2">
@@ -39,7 +39,7 @@ export default function Character() {
               return (
                 <div
                   key={item._id}
-                  className="bg-[#fff9d9] hover:bg-[#fff7c7] cursor-pointer border-[#815230] border-2 p-1 rounded-sm"
+                  className="bg-secondary cursor-pointer border-borderWeak border-2 p-1 rounded-sm"
                   onClick={() => setShowItemStatus(item)}
                 >
                   <img

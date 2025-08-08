@@ -49,7 +49,7 @@ export default function FlappyBird({
 
   const [pipeGap, setPipeGap] = useState<number>(INITIAL_PIPE_GAP);
   const [pipeInterval, setPipeInterval] = useState<number>(
-    INITIAL_PIPE_INTERVAL,
+    INITIAL_PIPE_INTERVAL
   );
   const [speed, setSpeed] = useState<number>(INITIAL_SPEED);
 
@@ -58,11 +58,11 @@ export default function FlappyBird({
     if (gameStarted && !isGameOver) {
       const difficultyInterval = setInterval(() => {
         setPipeGap((gap) =>
-          Math.max(MIN_PIPE_GAP, gap - DECRESE_PIPE_GAP_INTERVAL),
+          Math.max(MIN_PIPE_GAP, gap - DECRESE_PIPE_GAP_INTERVAL)
         );
         setSpeed((speed) => Math.min(MAX_SPEED, speed + INCRESE_SPEED));
         setPipeInterval((interval) =>
-          Math.max(MIN_PIPE_INTERVAL, interval - DECRESE_PIPE_INTERVAL),
+          Math.max(MIN_PIPE_INTERVAL, interval - DECRESE_PIPE_INTERVAL)
         );
       }, INTERVAL_CHANGE_DIFFICULTY);
       return () => clearInterval(difficultyInterval);
@@ -161,7 +161,7 @@ export default function FlappyBird({
         setPipes((oldPipes) =>
           oldPipes
             .map((pipe) => ({ ...pipe, left: pipe.left - speed }))
-            .filter((pipe) => pipe.left + PIPE_WIDTH > 0),
+            .filter((pipe) => pipe.left + PIPE_WIDTH > 0)
         );
       }, 30);
     }
@@ -342,7 +342,7 @@ export default function FlappyBird({
 
       {isGameOver && (
         <div className="absolute min-w-[250px] top-[50%] left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-black p-5 rounded-lg">
-          <div className="text-2xl text-[#345b95] text-center">Game Over</div>
+          <div className="text-2xl text-foreground text-center">Game Over</div>
           <div className="mt-4 flex gap-1">
             <img
               className="w-[34px] h-[34px]"
@@ -358,7 +358,7 @@ export default function FlappyBird({
 
           <button
             onClick={() => (window.location.href = "/")}
-            className="px-4 mt-4 bg-[#fff9d9] w-full hover:bg-[#fff7c7] cursor-pointer border-[#815230] text-[#815230] border-2 p-1 rounded-sm"
+            className="px-4 mt-4 bg-secondary w-full cursor-pointer border-borderWeak text-borderWeak border-2 p-1 rounded-sm"
           >
             Continue
           </button>

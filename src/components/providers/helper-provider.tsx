@@ -24,7 +24,7 @@ interface HelperContextType {
     title: string,
     text: string,
     action: undefined | (() => void),
-    canCancel: boolean,
+    canCancel: boolean
   ) => void;
   backendClient: BackendClient;
   userData: UserType;
@@ -32,7 +32,7 @@ interface HelperContextType {
   showCharacterStatus: Item | undefined;
   setShowSummaryCharacterStatus: (
     character: Item | undefined,
-    hat: Item | undefined,
+    hat: Item | undefined
   ) => void;
   showItemStatus: Item | undefined;
   setShowItemStatus: (item: Item) => void;
@@ -48,7 +48,7 @@ const HelperContext = createContext<() => HelperContextType>(() => {
       title: string,
       text: string,
       action: undefined | (() => void),
-      canCancel: boolean,
+      canCancel: boolean
     ) => {},
     backendClient: new BackendClient(() => {}),
     userData: initUserType,
@@ -76,7 +76,7 @@ export function HelperProvider({ children }: { children: ReactNode }) {
   const [showItemStatus, setShowItemStatus] = useState<Item | undefined>();
   const [isShowScoreBoard, setIsShowScoreBoard] = useState(false);
   const [router, setRouter] = useState<"character" | "shop" | "inventory">(
-    "character",
+    "character"
   );
 
   useEffect(() => {
@@ -128,7 +128,7 @@ export function HelperProvider({ children }: { children: ReactNode }) {
 
   const setShowSummaryCharacterStatus = (
     character: Item | undefined,
-    hat: Item | undefined,
+    hat: Item | undefined
   ) => {
     setShowCharacterStatus(character);
     setShowHatStatus(hat);
@@ -149,7 +149,7 @@ export function HelperProvider({ children }: { children: ReactNode }) {
       setAlert,
       fetchUser: initLiff,
     }),
-    [userData, router],
+    [userData, router]
   );
 
   return (
@@ -173,20 +173,19 @@ export function HelperProvider({ children }: { children: ReactNode }) {
       )}
 
       {isShowScoreBoard && (
-        <div className="fixed inset-0 z-50 bg-[#00000055] flex justify-center items-center">
-          <div className="bg-white rounded-xl p-4 w-[90%] max-w-[500px] max-h-[80vh] overflow-auto">
-            <div className="text-xl font-bold text-center mb-4 text-[#345b95]">
+        <div className="fixed inset-0 z-50 backdrop-blur-sm flex justify-center items-center">
+          <div className="bg-white rounded-xl p-4 w-[90%] max-w-[500px] max-h-[80vh] overflow-auto relative">
+            <button
+              className="absolute right-4 top-2 text-red-500 text-2xl text-md font-bold cursor-pointer"
+              onClick={() => setIsShowScoreBoard(false)}
+            >
+              ×
+            </button>
+            <div className="text-xl font-bold text-center mb-4 text-foreground">
               อันดับผู้เล่น
             </div>
 
             <ScoreBoardContent />
-
-            <button
-              onClick={() => setIsShowScoreBoard(false)}
-              className="mt-4 bg-[#f8da38] border-[#815230] border-2 px-4 py-2 rounded font-bold text-[#815230] w-full"
-            >
-              ปิด
-            </button>
           </div>
         </div>
       )}

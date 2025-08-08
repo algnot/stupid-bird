@@ -8,14 +8,14 @@ export default function NavBar() {
   return (
     <>
       <div
-        className="absolute bottom-[30px] left-1/2 transform -translate-x-1/2 w-[70px] h-[70px] flex flex-col justify-center items-center cursor-pointer rounded-full bg-[#ffd400] border-[#815230] border-2 z-10 shadow-md"
+        className="absolute bottom-[30px] left-1/2 transform -translate-x-1/2 w-[70px] h-[70px] flex flex-col justify-center items-center cursor-pointer rounded-full bg-primary border-borderWeak border-2 z-10 shadow-md"
         onClick={() => (window.location.href = "/play")}
       >
         <img src="/play.png" className="w-[32px]" alt="play" />
         <span className="text-[12px]">เล่น</span>
       </div>
 
-      <div className="absolute bottom-0 left-0 w-full bg-[#ffd400] border-[#815230] border-2 flex justify-around rounded-t-3xl text-[12px] shadow-md py-3">
+      <div className="absolute bottom-0 left-0 w-full bg-primary border-borderWeak border-2 flex justify-around rounded-t-3xl text-[12px] shadow-md py-3">
         <div
           className="flex justify-center flex-col items-center cursor-pointer"
           onClick={() => setRouter("character")}

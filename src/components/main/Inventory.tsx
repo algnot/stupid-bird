@@ -9,7 +9,7 @@ import { convertItemInfoToItem } from "@/type/shop";
 export default function Inventory() {
   const [userItems, setUserItems] = useState<Item[]>([]);
   const [selectedTab, setSelectedTab] = useState<"character" | "hat">(
-    "character",
+    "character"
   );
 
   const {
@@ -27,7 +27,7 @@ export default function Inventory() {
   }, []);
 
   const character = userData.installItems.find(
-    (item) => item.info.type === "character",
+    (item) => item.info.type === "character"
   );
   const hat = userData.installItems.find((item) => item.info.type === "hat");
 
@@ -48,7 +48,7 @@ export default function Inventory() {
         setFullLoading(true);
         const response = await backendClient.installItem(
           userData.userId,
-          item._id,
+          item._id
         );
         await fetchUser();
         setFullLoading(false);
@@ -62,7 +62,7 @@ export default function Inventory() {
             setFullLoading(true);
             const userItemResponse = await backendClient.GetUserItems(
               userData.userId,
-              "all",
+              "all"
             );
             setFullLoading(false);
             if (isErrorResponse(userItemResponse)) {
@@ -70,17 +70,17 @@ export default function Inventory() {
             }
             setUserItems(userItemResponse.items);
           },
-          false,
+          false
         );
       },
-      true,
+      true
     );
   };
 
   const tabClass = (tab: string) =>
     `relative flex items-center gap-2 px-5 py-2 text-white text-sm
-     rounded-xl border border-[#3c2821] border-2
-     ${selectedTab === tab ? "bg-[#3c2821]" : "bg-[#6c5147]"}`;
+     rounded-xl border border-borderStrong border-2
+     ${selectedTab === tab ? "bg-borderStrong" : "bg-bgDefault"}`;
 
   const Dot = ({ active }: { active: boolean }) => (
     <div
@@ -113,7 +113,7 @@ export default function Inventory() {
       )}
 
       <div className="mt-8">
-        <div className="flex justify-center gap-2 bg-[#6c5147] border-y-2 border-[#3c2821] py-3">
+        <div className="flex justify-center gap-2 bg-bgDefault border-y-2 border-borderStrong py-3">
           <button
             className={tabClass("character")}
             onClick={() => setSelectedTab("character")}
@@ -132,13 +132,13 @@ export default function Inventory() {
           </button>
         </div>
 
-        <div className="bg-[#6c5147] border-b-2 border-[#3c2821] p-4 flex flex-wrap justify-center gap-4 h-[calc(100dvh-400px)] overflow-auto pb-24">
+        <div className="bg-bgDefault border-b-2 border-borderStrong p-4 flex flex-wrap justify-center gap-4 h-[calc(100dvh-400px)] overflow-auto pb-24">
           {userItems
             .filter((item) => item.info.type === selectedTab)
             .map((item) => {
               return (
                 <div
-                  className="bg-[#4a342d] rounded-md p-4 w-[140px] sm:w-[160px] md:w-[180px] flex flex-col items-center h-fit"
+                  className="bg-bgCard rounded-md p-4 w-[140px] sm:w-[160px] md:w-[180px] flex flex-col items-center h-fit"
                   key={item._id}
                 >
                   <div className="flex items-center justify-between w-full mb-2">
@@ -164,7 +164,7 @@ export default function Inventory() {
                     alt={item.itemId}
                     onClick={() =>
                       setShowItemStatus(
-                        convertItemInfoToItem(userData, item.info),
+                        convertItemInfoToItem(userData, item.info)
                       )
                     }
                   />
@@ -178,7 +178,7 @@ export default function Inventory() {
                   {!item.isInstall && (
                     <div
                       onClick={() => onInstallItem(item)}
-                      className="flex gap-1 justify-center items-center bg-[#f3bb3f] rounded-sm shadow-md cursor-pointer mt-2 border-2 border-black py-2 px-3 text-sm"
+                      className="flex gap-1 justify-center items-center bg-bgButton rounded-sm shadow-md cursor-pointer mt-2 border-2 border-black py-2 px-3 text-sm"
                     >
                       ติดตั้ง
                     </div>

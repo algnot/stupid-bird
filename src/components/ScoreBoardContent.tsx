@@ -36,7 +36,7 @@ const UserItem = ({ userId }: { userId: string }) => {
         return (
           <div
             key={item._id}
-            className="bg-[#fff9d9] hover:bg-[#fff7c7] cursor-pointer border-[#815230] border-2 p-1 rounded-sm"
+            className="bg-secondary cursor-pointer border-borderWeak border-2 p-1 rounded-sm"
             onClick={() => setShowItemInfo(item)}
           >
             <img
@@ -77,7 +77,7 @@ export default function ScoreBoardContent() {
       {scores.map((user, index) => (
         <div
           key={user.userId + index}
-          className="flex items-center justify-between bg-[#fff9d9] p-2 rounded border-[#815230] border-2"
+          className="flex items-center justify-between bg-secondary p-2 rounded border-borderWeak border-2"
         >
           <div className="flex items-center gap-2 drop-shadow-[1px_1px_1px_rgba(0,0,0,0.3)]">
             <img
@@ -85,10 +85,10 @@ export default function ScoreBoardContent() {
               alt="avatar"
               className="w-8 h-8 rounded-full"
             />
-            <span className="text-[#815230]">{user.displayName}</span>
+            <span className="text-borderWeak">{user.displayName}</span>
           </div>
           <UserItem userId={user.userId} />
-          <div className="flex items-center text-right font-bold text-[#345b95] drop-shadow-[1px_1px_1px_rgba(0,0,0,0.3)]">
+          <div className="flex items-center text-right font-bold text-foreground drop-shadow-[1px_1px_1px_rgba(0,0,0,0.3)]">
             {user.bestPoint.toLocaleString()}
             <img
               className="w-[20px] h-[20px]"

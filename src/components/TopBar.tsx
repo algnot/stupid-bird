@@ -6,7 +6,7 @@ export default function TopBar() {
   const { userData } = useHelperContext()();
   return (
     <div className="flex justify-between p-3">
-      <div className="flex items-center gap-3 bg-[#fff9d9] border-[#815230] text-[#345b95] font-bold border-2 px-4 py-2 rounded-xl">
+      <div className="flex items-center gap-3 bg-secondary border-borderWeak text-foreground font-bold border-2 px-4 py-2 rounded-xl">
         <div className="flex">
           <img
             className="w-[30px] h-[30px] rounded-full"
@@ -28,7 +28,7 @@ export default function TopBar() {
           </span>
         </div>
       </div>
-      <div className="flex items-center gap-2 bg-[#fff9d9] border-[#815230] text-[#815230] border-2 px-4 py-2 rounded-xl">
+      <div className="flex items-center gap-2 bg-secondary border-borderWeak text-borderWeak border-2 px-4 py-2 rounded-xl">
         {userData.pictureUrl !== "" && (
           <img
             className="w-[40px] h-[40px] rounded-full"

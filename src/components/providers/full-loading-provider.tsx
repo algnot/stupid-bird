@@ -14,7 +14,7 @@ function FullLoading() {
   return (
     <div className="absolute inset-0 z-100 flex items-center justify-center backdrop-blur-sm">
       <div className="text-center">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-[#815230] border-opacity-50 mb-4 mx-auto"></div>
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-borderWeak border-opacity-50 mb-4 mx-auto"></div>
       </div>
     </div>
   );

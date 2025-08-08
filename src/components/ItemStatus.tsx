@@ -28,7 +28,7 @@ const GROUPED_KEYS: Record<string, (keyof GameConfig)[]> = {
 
 function renderValue(key: keyof GameConfig, value: number) {
   return (
-    <p key={key} className="text-[#444] mb-1">
+    <p key={key} className="text-foreground mb-1">
       {gameConfigLabelToLabel(key)} <b>{value.toLocaleString()}</b>
     </p>
   );
@@ -39,15 +39,15 @@ export default function ItemStatus({ itemInfo, onClose }: ItemStatusProps) {
   const gameConfig = itemInfo?.info.level[level];
 
   return (
-    <div className="absolute inset-0 bg-[#00000055] bg-opacity-50 flex items-center justify-center z-50 px-2">
-      <div className="bg-[#fff9d9] p-6 rounded-xl shadow-lg relative border-[#815230] border-2 max-w-[500px] max-h-[80vh] overflow-auto">
+    <div className="absolute inset-0 backdrop-blur-sm flex items-center justify-center z-50 px-2">
+      <div className="bg-secondary p-6 rounded-xl shadow-lg relative border-borderWeak border-2 max-w-[500px] max-h-[80vh] overflow-auto">
         <button
           className="absolute top-2 right-3 text-red-500 text-2xl font-bold cursor-pointer"
           onClick={onClose}
         >
           ×
         </button>
-        <div className="text-md font-bold text-[#345b95] mb-4">
+        <div className="text-md font-bold text-foreground mb-4">
           {itemInfo?.info.name.th ?? ""}
         </div>
         <div className="flex justify-center mb-4">
@@ -62,17 +62,17 @@ export default function ItemStatus({ itemInfo, onClose }: ItemStatusProps) {
           <>
             {Object.entries(GROUPED_KEYS).map(([section, keys]) => {
               const hasAny = keys.some(
-                (key) => gameConfig[key] && gameConfig[key] !== 0,
+                (key) => gameConfig[key] && gameConfig[key] !== 0
               );
               if (!hasAny) return null;
 
               return (
                 <div key={section} className="mb-3">
-                  <b className="text-[#444]">{section}</b>
+                  <b className="text-foreground">{section}</b>
                   {keys.map((key) =>
                     gameConfig[key] && gameConfig[key] !== 0
                       ? renderValue(key, gameConfig[key] as number)
-                      : null,
+                      : null
                   )}
                 </div>
               );
