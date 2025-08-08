@@ -91,7 +91,7 @@ export default function Inventory() {
   );
 
   return (
-    <div>
+    <div className="h-full">
       {character && (
         <div className="relative flex flex-col justify-center items-center gap-6 mt-10">
           {hat && (
@@ -112,7 +112,7 @@ export default function Inventory() {
         </div>
       )}
 
-      <div className="mt-8">
+      <div className="mt-8 h-full flex flex-col">
         <div className="flex justify-center gap-2 bg-bgDefault border-y-2 border-borderStrong py-3">
           <button
             className={tabClass("character")}
@@ -132,60 +132,60 @@ export default function Inventory() {
           </button>
         </div>
 
-        <div className="bg-bgDefault border-b-2 border-borderStrong p-4 flex flex-wrap justify-center gap-4 h-[calc(100dvh-400px)] overflow-auto pb-24">
-          {userItems
-            .filter((item) => item.info.type === selectedTab)
-            .map((item) => {
-              return (
-                <div
-                  className="bg-bgCard rounded-md p-4 w-[140px] sm:w-[160px] md:w-[180px] flex flex-col items-center h-fit"
-                  key={item._id}
-                >
-                  <div className="flex items-center justify-between w-full mb-2">
+        <div className="flex-1 bg-bgDefault pt-4 px-4 overflow-auto pb-24">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-[325px]">
+            {userItems
+              .filter((item) => item.info.type === selectedTab)
+              .map((item) => {
+                return (
+                  <div
+                    className="bg-bgCard rounded-md p-4 w-full h-full flex flex-col items-center"
+                    key={item._id}
+                  >
+                    <div className="flex items-center justify-between w-full mb-2">
+                      <img
+                        src={
+                          item.info.type === "character"
+                            ? "/bird-icon.png"
+                            : "/hat-icon.png"
+                        }
+                        width={24}
+                        alt={item.itemId}
+                      />
+                      <div className="text-white text-xs text-right flex-1 ml-2">
+                        {item.info.name.th ?? ""}
+                      </div>
+                    </div>
+
                     <img
-                      src={
-                        item.info.type === "character"
-                          ? "/bird-icon.png"
-                          : "/hat-icon.png"
-                      }
-                      width={24}
+                      src={item.info.image ?? ""}
+                      className="my-2 cursor-pointer object-contain w-[100px] h-[100px]"
                       alt={item.itemId}
+                      onClick={() =>
+                        setShowItemStatus(
+                          convertItemInfoToItem(userData, item.info)
+                        )
+                      }
                     />
-                    <div className="text-white text-xs text-right flex-1 ml-2">
-                      {item.info.name.th ?? ""}
-                    </div>
+
+                    {item.isInstall && (
+                      <div className="h-[40px] flex justify-center items-center text-white mt-2">
+                        ติดตั้งอยู่
+                      </div>
+                    )}
+
+                    {!item.isInstall && (
+                      <div
+                        onClick={() => onInstallItem(item)}
+                        className="h-[40px] flex gap-1 justify-center items-center bg-bgButton rounded-xl shadow-md cursor-pointer mt-2 border-2 border-black py-2 px-3 text-sm"
+                      >
+                        ติดตั้ง
+                      </div>
+                    )}
                   </div>
-
-                  <img
-                    src={item.info.image ?? ""}
-                    className="my-2 cursor-pointer"
-                    height={50}
-                    width={120}
-                    alt={item.itemId}
-                    onClick={() =>
-                      setShowItemStatus(
-                        convertItemInfoToItem(userData, item.info)
-                      )
-                    }
-                  />
-
-                  {item.isInstall && (
-                    <div className="flex justify-center items-center text-white mt-2">
-                      ติดตั้งอยู่
-                    </div>
-                  )}
-
-                  {!item.isInstall && (
-                    <div
-                      onClick={() => onInstallItem(item)}
-                      className="flex gap-1 justify-center items-center bg-bgButton rounded-sm shadow-md cursor-pointer mt-2 border-2 border-black py-2 px-3 text-sm"
-                    >
-                      ติดตั้ง
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+                );
+              })}
+          </div>
         </div>
       </div>
     </div>
