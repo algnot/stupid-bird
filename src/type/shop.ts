@@ -21,6 +21,7 @@ export const convertItemInfoToItem = (userData: UserType, itemInfo: ItemInfo): I
         itemId: itemInfo._id,
         level: 0,
         isInstall: false,
-        info: itemInfo
+        info: itemInfo,
+        qty: 0
     }
 }
