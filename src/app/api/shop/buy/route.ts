@@ -50,7 +50,9 @@ export async function POST(req: Request) {
         await db.collection("users").updateOne(
             { userId: userId },
             {
-                $inc: { coin: -1 * shopInfo[0].price },
+                $inc: {
+                    [shopInfo[0].unit]: -1 * shopInfo[0].price,
+                },
             },
         );
 
