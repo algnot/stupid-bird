@@ -20,7 +20,7 @@ export default function Character() {
             <img
               src={hat.info.image}
               alt={hat.info.name.en}
-              className="absolute top-[-40px] z-10 w-[100px] h-[100px]"
+              className="absolute top-[-40px] z-2 w-[100px] h-[100px]"
               onClick={() => setShowSummaryCharacterStatus(character, hat)}
             />
           )}

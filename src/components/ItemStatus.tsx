@@ -39,47 +39,54 @@ export default function ItemStatus({ itemInfo, onClose }: ItemStatusProps) {
   const gameConfig = itemInfo?.info.level[level];
 
   return (
-    <div className="absolute inset-0 backdrop-blur-sm flex items-center justify-center z-50 px-2">
-      <div className="bg-secondary p-6 rounded-xl shadow-lg relative border-borderWeak border-2 max-w-[500px] max-h-[80vh] overflow-auto">
-        <button
-          className="absolute top-2 right-3 text-red-500 text-2xl font-bold cursor-pointer"
-          onClick={onClose}
-        >
-          ×
-        </button>
-        <div className="text-md font-bold text-foreground mb-4">
-          {itemInfo?.info.name.th ?? ""}
-        </div>
-        <div className="flex justify-center mb-4">
-          <img
-            className="w-[190px] h-[160px]"
-            src={itemInfo?.info.image}
-            alt={itemInfo?.info.name.en}
-          />
-        </div>
+    <>
+      <div
+        className="absolute z-3 inset-0 backdrop-blur-sm flex items-center justify-center px-2"
+        onClick={onClose}
+      />
 
-        {gameConfig && (
-          <>
-            {Object.entries(GROUPED_KEYS).map(([section, keys]) => {
-              const hasAny = keys.some(
-                (key) => gameConfig[key] && gameConfig[key] !== 0
-              );
-              if (!hasAny) return null;
+      <div className="absolute z-4 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90vw] md:w-[550px] max-h-[80vh] overflow-auto">
+        <div className="w-full h-full bg-secondary p-6 rounded-xl shadow-lg relative border-borderWeak border-2">
+          <button
+            className="absolute top-2 right-3 text-red-500 text-2xl font-bold cursor-pointer"
+            onClick={onClose}
+          >
+            ×
+          </button>
+          <div className="text-md font-bold text-foreground mb-4">
+            {itemInfo?.info.name.th ?? ""}
+          </div>
+          <div className="flex justify-center mb-4">
+            <img
+              className="w-[190px] h-[160px]"
+              src={itemInfo?.info.image}
+              alt={itemInfo?.info.name.en}
+            />
+          </div>
 
-              return (
-                <div key={section} className="mb-3">
-                  <b className="text-foreground">{section}</b>
-                  {keys.map((key) =>
-                    gameConfig[key] && gameConfig[key] !== 0
-                      ? renderValue(key, gameConfig[key] as number)
-                      : null
-                  )}
-                </div>
-              );
-            })}
-          </>
-        )}
+          {gameConfig && (
+            <>
+              {Object.entries(GROUPED_KEYS).map(([section, keys]) => {
+                const hasAny = keys.some(
+                  (key) => gameConfig[key] && gameConfig[key] !== 0
+                );
+                if (!hasAny) return null;
+
+                return (
+                  <div key={section} className="mb-3">
+                    <b className="text-foreground">{section}</b>
+                    {keys.map((key) =>
+                      gameConfig[key] && gameConfig[key] !== 0
+                        ? renderValue(key, gameConfig[key] as number)
+                        : null
+                    )}
+                  </div>
+                );
+              })}
+            </>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }

@@ -8,7 +8,7 @@ export default function NavBar() {
   return (
     <>
       <div
-        className="absolute bottom-[30px] left-1/2 transform -translate-x-1/2 w-[70px] h-[70px] flex flex-col justify-center items-center cursor-pointer rounded-full bg-primary border-borderWeak border-2 z-10 shadow-md"
+        className="absolute bottom-[30px] left-1/2 transform -translate-x-1/2 w-[70px] h-[70px] flex flex-col justify-center items-center cursor-pointer rounded-full bg-primary border-borderWeak border-2 z-2 shadow-md"
         onClick={() => (window.location.href = "/play")}
       >
         <img src="/play.png" className="w-[32px]" alt="play" />

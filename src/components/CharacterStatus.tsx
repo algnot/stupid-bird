@@ -49,28 +49,35 @@ export default function CharacterStatus({
   onClose,
 }: StatusProps) {
   return (
-    <div className="absolute inset-0 backdrop-blur-sm flex items-center justify-center z-50 px-2">
-      <div className="bg-secondary p-6 rounded-xl shadow-lg relative border-borderWeak border-2 max-w-[500px] max-h-[80vh] overflow-auto">
-        <button
-          className="absolute top-2 right-3 text-red-500 text-2xl text-md font-bold cursor-pointer"
-          onClick={onClose}
-        >
-          ×
-        </button>
+    <>
+      <div
+        className="absolute z-3 inset-0 backdrop-blur-sm"
+        onClick={onClose}
+      />
 
-        {Object.entries(GROUPED_KEYS).map(([section, keys]) => (
-          <div key={section} className="mb-3">
-            <b className="text-foreground">{section}</b>
-            {keys.map((key) =>
-              renderDiff(
-                key,
-                characterStatus?.[key] as number,
-                hatStatus?.[key] as number
-              )
-            )}
-          </div>
-        ))}
+      <div className="absolute z-4 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90vw] md:w-[550px] max-h-[80vh] overflow-auto">
+        <div className="w-full h-full bg-secondary p-6 rounded-xl shadow-lg relative border-borderWeak border-2">
+          <button
+            className="absolute top-2 right-3 text-red-500 text-2xl text-md font-bold cursor-pointer"
+            onClick={onClose}
+          >
+            ×
+          </button>
+
+          {Object.entries(GROUPED_KEYS).map(([section, keys]) => (
+            <div key={section} className="mb-3">
+              <b className="text-foreground">{section}</b>
+              {keys.map((key) =>
+                renderDiff(
+                  key,
+                  characterStatus?.[key] as number,
+                  hatStatus?.[key] as number
+                )
+              )}
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 }

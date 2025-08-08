@@ -28,30 +28,37 @@ export function AlertDialogComponent({
   };
 
   return (
-    <div className="fixed inset-0 z-50 backdrop-blur-sm flex items-center justify-center">
-      <div className="bg-bgDefault border-4 border-borderStrong rounded-2xl p-6 w-[90%] max-w-sm shadow-lg text-white">
-        <h2 className="text-lg font-bold text-center mb-4">{title}</h2>
+    <>
+      <div
+        className="absolute inset-0 z-3 backdrop-blur-sm flex items-center justify-center"
+        onClick={onCancel}
+      />
 
-        <p className="text-sm text-center mb-6">{text}</p>
+      <div className="absolute z-4 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        <div className="bg-bgDefault border-4 border-borderStrong rounded-2xl p-6 w-[90%] max-w-sm shadow-lg text-white">
+          <h2 className="text-lg font-bold text-center mb-4">{title}</h2>
 
-        <div className="flex justify-center gap-4">
-          {canCancel && (
+          <p className="text-sm text-center mb-6">{text}</p>
+
+          <div className="flex justify-center gap-4">
+            {canCancel && (
+              <button
+                onClick={onCancel}
+                className="bg-borderStrong text-white rounded-lg px-4 py-2 text-sm shadow cursor-pointer"
+              >
+                ยกเลิก
+              </button>
+            )}
             <button
-              onClick={onCancel}
-              className="bg-borderStrong text-white rounded-lg px-4 py-2 text-sm shadow cursor-pointer"
+              onClick={handleActionClick}
+              className="bg-primary hover:bg-bgButton text-black rounded-lg px-4 py-2 text-sm shadow cursor-pointer"
             >
-              ยกเลิก
+              ตกลง
             </button>
-          )}
-          <button
-            onClick={handleActionClick}
-            className="bg-primary hover:bg-bgButton text-black rounded-lg px-4 py-2 text-sm shadow cursor-pointer"
-          >
-            ตกลง
-          </button>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

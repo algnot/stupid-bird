@@ -173,21 +173,28 @@ export function HelperProvider({ children }: { children: ReactNode }) {
       )}
 
       {isShowScoreBoard && (
-        <div className="fixed inset-0 z-50 backdrop-blur-sm flex justify-center items-center">
-          <div className="bg-white rounded-xl p-4 w-[90%] max-w-[500px] max-h-[80vh] overflow-auto relative">
-            <button
-              className="absolute right-4 top-2 text-red-500 text-2xl text-md font-bold cursor-pointer"
-              onClick={() => setIsShowScoreBoard(false)}
-            >
-              ×
-            </button>
-            <div className="text-xl font-bold text-center mb-4 text-foreground">
-              อันดับผู้เล่น
-            </div>
+        <>
+          <div
+            className="absolute z-3 inset-0 backdrop-blur-sm flex justify-center items-center"
+            onClick={() => setIsShowScoreBoard(false)}
+          />
 
-            <ScoreBoardContent />
+          <div className="absolute z-4 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90vw] md:w-[550px] max-h-[80vh] overflow-auto">
+            <div className="w-full h-full bg-white rounded-xl p-4 overflow-auto relative">
+              <button
+                className="absolute right-4 top-2 text-red-500 text-2xl text-md font-bold cursor-pointer"
+                onClick={() => setIsShowScoreBoard(false)}
+              >
+                ×
+              </button>
+              <div className="text-xl font-bold text-center mb-4 text-foreground">
+                อันดับผู้เล่น
+              </div>
+
+              <ScoreBoardContent />
+            </div>
           </div>
-        </div>
+        </>
       )}
       {children}
     </HelperContext.Provider>

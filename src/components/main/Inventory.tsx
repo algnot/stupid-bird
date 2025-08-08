@@ -98,7 +98,7 @@ export default function Inventory() {
             <img
               src={hat.info.image}
               alt={hat.info.name.en}
-              className="absolute top-[-40px] z-10 w-[80px] h-[80px]"
+              className="absolute top-[-40px] z-2 w-[80px] h-[80px]"
               onClick={() => setShowSummaryCharacterStatus(character, hat)}
             />
           )}
