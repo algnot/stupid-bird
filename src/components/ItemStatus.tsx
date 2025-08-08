@@ -41,11 +41,11 @@ export default function ItemStatus({ itemInfo, onClose }: ItemStatusProps) {
   return (
     <>
       <div
-        className="absolute z-3 inset-0 backdrop-blur-sm flex items-center justify-center px-2"
+        className="absolute z-5 inset-0 backdrop-blur-sm flex items-center justify-center px-2"
         onClick={onClose}
       />
 
-      <div className="absolute z-4 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90vw] md:w-[550px] max-h-[80vh] overflow-auto">
+      <div className="absolute z-6 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90vw] md:w-[550px] max-h-[80vh] overflow-auto">
         <div className="w-full h-full bg-secondary p-6 rounded-xl shadow-lg relative border-borderWeak border-2">
           <button
             className="absolute top-2 right-3 text-red-500 text-2xl font-bold cursor-pointer"

@@ -34,8 +34,8 @@ export function AlertDialogComponent({
         onClick={onCancel}
       />
 
-      <div className="absolute z-4 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-        <div className="bg-bgDefault border-4 border-borderStrong rounded-2xl p-6 w-[90%] max-w-sm shadow-lg text-white">
+      <div className="absolute z-4 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90vw] md:w-[550px] max-h-[80vh] overflow-auto">
+        <div className="bg-bgDefault border-4 border-borderStrong rounded-2xl p-6 shadow-lg text-white">
           <h2 className="text-lg font-bold text-center mb-4">{title}</h2>
 
           <p className="text-sm text-center mb-6">{text}</p>

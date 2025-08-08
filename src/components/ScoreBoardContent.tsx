@@ -5,12 +5,10 @@ import { Item, ScoreBoard } from "@/type/users";
 import { useEffect, useState } from "react";
 import { useHelperContext } from "./providers/helper-provider";
 import { isErrorResponse } from "@/type/payload";
-import ItemStatus from "./ItemStatus";
 
 const UserItem = ({ userId }: { userId: string }) => {
-  const { backendClient } = useHelperContext()();
+  const { backendClient, setShowItemStatus } = useHelperContext()();
   const [items, setItems] = useState<Item[]>([]);
-  const [showItemInfo, setShowItemInfo] = useState<Item | null>(null);
 
   useEffect(() => {
     getUserItems();
@@ -25,19 +23,13 @@ const UserItem = ({ userId }: { userId: string }) => {
   };
 
   return (
-    <div className="flex gap-2">
-      {showItemInfo !== null && (
-        <ItemStatus
-          onClose={() => setShowItemInfo(null)}
-          itemInfo={showItemInfo}
-        />
-      )}
+    <div className="flex gap-2 justify-center">
       {items.map((item) => {
         return (
           <div
             key={item._id}
             className="bg-secondary cursor-pointer border-borderWeak border-2 p-1 rounded-sm"
-            onClick={() => setShowItemInfo(item)}
+            onClick={() => setShowItemStatus(item)}
           >
             <img
               className="w-[30px] h-[30px]"
@@ -77,7 +69,7 @@ export default function ScoreBoardContent() {
       {scores.map((user, index) => (
         <div
           key={user.userId + index}
-          className="flex items-center justify-between bg-secondary p-2 rounded border-borderWeak border-2"
+          className="grid grid-cols-3 items-center bg-secondary p-2 rounded border-borderWeak border-2"
         >
           <div className="flex items-center gap-2 drop-shadow-[1px_1px_1px_rgba(0,0,0,0.3)]">
             <img
@@ -85,10 +77,10 @@ export default function ScoreBoardContent() {
               alt="avatar"
               className="w-8 h-8 rounded-full"
             />
-            <span className="text-borderWeak">{user.displayName}</span>
+            <span className="text-borderWeak truncate">{user.displayName}</span>
           </div>
           <UserItem userId={user.userId} />
-          <div className="flex items-center text-right font-bold text-foreground drop-shadow-[1px_1px_1px_rgba(0,0,0,0.3)]">
+          <div className="flex items-center justify-end font-bold text-foreground drop-shadow-[1px_1px_1px_rgba(0,0,0,0.3)]">
             {user.bestPoint.toLocaleString()}
             <img
               className="w-[20px] h-[20px]"
