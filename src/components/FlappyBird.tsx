@@ -11,6 +11,7 @@ interface Pipe {
   left: number;
   height: number;
   gap: number;
+  immortal: boolean;
 }
 
 const PIPE_WIDTH = 60;
@@ -36,6 +37,7 @@ export default function FlappyBird({
   INCRESE_SCORE_PER_SECONDE,
   CHARACTER_IMAGE,
   COIN_PER_CLICK,
+  SKILL_EVASION_FLIGHT,
 }: GameConfig) {
   const { setFullLoading, backendClient, userData } = useHelperContext()();
   const [gameHeight, setGameHeight] = useState<number>(600);
@@ -49,20 +51,23 @@ export default function FlappyBird({
 
   const [pipeGap, setPipeGap] = useState<number>(INITIAL_PIPE_GAP);
   const [pipeInterval, setPipeInterval] = useState<number>(
-    INITIAL_PIPE_INTERVAL
+    INITIAL_PIPE_INTERVAL,
   );
   const [speed, setSpeed] = useState<number>(INITIAL_SPEED);
+
+  // state
+  const [immortal, setImmortal] = useState<boolean>(false);
 
   // handler difficulty
   useEffect(() => {
     if (gameStarted && !isGameOver) {
       const difficultyInterval = setInterval(() => {
         setPipeGap((gap) =>
-          Math.max(MIN_PIPE_GAP, gap - DECRESE_PIPE_GAP_INTERVAL)
+          Math.max(MIN_PIPE_GAP, gap - DECRESE_PIPE_GAP_INTERVAL),
         );
         setSpeed((speed) => Math.min(MAX_SPEED, speed + INCRESE_SPEED));
         setPipeInterval((interval) =>
-          Math.max(MIN_PIPE_INTERVAL, interval - DECRESE_PIPE_INTERVAL)
+          Math.max(MIN_PIPE_INTERVAL, interval - DECRESE_PIPE_INTERVAL),
         );
       }, INTERVAL_CHANGE_DIFFICULTY);
       return () => clearInterval(difficultyInterval);
@@ -100,6 +105,7 @@ export default function FlappyBird({
           left: GAME_WIDTH,
           height: topHeight,
           gap: pipeGap,
+          immortal: false,
         },
       ]);
     }, pipeInterval);
@@ -110,6 +116,8 @@ export default function FlappyBird({
   // handler collistion
   useEffect(() => {
     pipes.forEach((pipe) => {
+      if (immortal || pipe.immortal) return;
+
       const pipeBottomY = pipe.height + pipe.gap;
       const birdTop = birdPosition;
       const birdBottom = birdPosition + BIRD_SIZE;
@@ -127,7 +135,9 @@ export default function FlappyBird({
     });
 
     if (birdPosition >= gameHeight - BIRD_SIZE - COLLISION_MARGIN) {
-      endGame();
+      if (!immortal) {
+        endGame();
+      }
     }
   }, [pipes, birdPosition, gameHeight]);
 
@@ -135,11 +145,19 @@ export default function FlappyBird({
   useEffect(() => {
     if (gameStarted && !isGameOver) {
       const interval = setInterval(() => {
-        setScore((score) => score + INCRESE_SCORE_PER_SECONDE);
+        let multiplyScore = 1;
+        if (
+          SKILL_EVASION_FLIGHT &&
+          SKILL_EVASION_FLIGHT?.COOL_DOWN > 0 &&
+          immortal
+        ) {
+          multiplyScore = SKILL_EVASION_FLIGHT?.SCORE_MULTIPLE ?? 1;
+        }
+        setScore((score) => score + INCRESE_SCORE_PER_SECONDE * multiplyScore);
       }, SECONDE_PER_SCORE);
       return () => clearInterval(interval);
     }
-  }, [gameStarted, isGameOver]);
+  }, [gameStarted, isGameOver, immortal]);
 
   // handler click
   useEffect(() => {
@@ -161,7 +179,7 @@ export default function FlappyBird({
         setPipes((oldPipes) =>
           oldPipes
             .map((pipe) => ({ ...pipe, left: pipe.left - speed }))
-            .filter((pipe) => pipe.left + PIPE_WIDTH > 0)
+            .filter((pipe) => pipe.left + PIPE_WIDTH > 0),
         );
       }, 30);
     }
@@ -226,8 +244,67 @@ export default function FlappyBird({
     setFullLoading(false);
   };
 
+  // start skill: Evasion Flight
+  const [cooldownLeft, setCooldownLeft] = useState(0);
+  const [immortalLeft, setImmortalLeft] = useState(0);
+  useEffect(() => {
+    if (!gameStarted) return;
+
+    const COOL_DOWN = SKILL_EVASION_FLIGHT?.COOL_DOWN ?? 0;
+    const IMMORTAL_TIME = SKILL_EVASION_FLIGHT?.IMMORTAL_TIME ?? 0;
+
+    if (COOL_DOWN <= 0 || IMMORTAL_TIME <= 0) return;
+
+    let alive = true;
+    let cooldownTimer: ReturnType<typeof setTimeout> | null = null;
+    let immortalTimer: ReturnType<typeof setTimeout> | null = null;
+    let tickInterval: ReturnType<typeof setInterval> | null = null;
+
+    const startCooldown = () => {
+      setImmortal(false);
+      setCooldownLeft(COOL_DOWN);
+      cooldownTimer = setTimeout(() => {
+        if (!alive) return;
+        startImmortal();
+      }, COOL_DOWN + 100);
+    };
+
+    const startImmortal = () => {
+      setImmortal(true);
+      setImmortalLeft(IMMORTAL_TIME);
+      immortalTimer = setTimeout(() => {
+        if (!alive) return;
+        startCooldown();
+      }, IMMORTAL_TIME);
+    };
+
+    tickInterval = setInterval(() => {
+      if (!alive) return;
+
+      setCooldownLeft((prev) => (prev > 0 ? prev - 100 : 0));
+      setImmortalLeft((prev) => (prev > 0 ? prev - 100 : 0));
+    }, 100);
+
+    startCooldown();
+
+    return () => {
+      alive = false;
+      if (cooldownTimer) clearTimeout(cooldownTimer);
+      if (immortalTimer) clearTimeout(immortalTimer);
+      if (tickInterval) clearInterval(tickInterval);
+    };
+  }, [
+    SKILL_EVASION_FLIGHT?.COOL_DOWN,
+    SKILL_EVASION_FLIGHT?.IMMORTAL_TIME,
+    gameStarted,
+  ]);
+  // end skill: Evasion Flight
+
   return (
-    <div onClick={handleJump} style={{ height: gameHeight, backgroundImage: "url('/bg.png')" }}>
+    <div
+      onClick={handleJump}
+      style={{ height: gameHeight, backgroundImage: "url('/bg.png')" }}
+    >
       {CHARACTER_IMAGE && (
         <div
           className="absolute z-10 pointer-events-none"
@@ -276,6 +353,8 @@ export default function FlappyBird({
                 top: 0,
                 left: "50%",
                 transform: "translateX(-50%)",
+                opacity:
+                  (immortal || pipe.immortal) && !isGameOver ? "50%" : "100%",
               }}
             />
             <img
@@ -287,17 +366,22 @@ export default function FlappyBird({
                 position: "absolute",
                 left: 0,
                 top: pipe.height - 40,
+                opacity:
+                  (immortal || pipe.immortal) && !isGameOver ? "50%" : "100%",
               }}
             />
           </div>
 
           <div
-            className="absolute overflow-hidden"
             style={{
               left: pipe.left,
               top: pipe.height + pipe.gap,
               width: PIPE_WIDTH,
               height: gameHeight - pipe.height - pipe.gap,
+              opacity:
+                (immortal || pipe.immortal) && !isGameOver ? "50%" : "100%",
+              position: "absolute",
+              overflow: "hidden",
             }}
           >
             <img
@@ -310,6 +394,8 @@ export default function FlappyBird({
                 left: 0,
                 top: 0,
                 transform: "rotate(180deg)",
+                opacity:
+                  (immortal || pipe.immortal) && !isGameOver ? "50%" : "100%",
               }}
             />
             <img
@@ -323,6 +409,8 @@ export default function FlappyBird({
                 top: 40,
                 left: "50%",
                 transform: "translateX(-50%)",
+                opacity:
+                  (immortal || pipe.immortal) && !isGameOver ? "50%" : "100%",
               }}
             />
           </div>
@@ -339,6 +427,27 @@ export default function FlappyBird({
           {coin.toLocaleString()}
         </div>
       </div>
+
+      {!isGameOver && (
+        <>
+          <div
+            className={`absolute top-4 right-4 drop-shadow-[1px_1px_1px_rgba(0,0,0,0.8)] border-2 p-0.5 border-white bg-[#00000050] rounded-sm ${
+              immortal ? "" : "opacity-50"
+            }`}
+          >
+            <img
+              src="https://pub-6e552ae286d54e4d9efc4d84fab7f96f.r2.dev/skill-evasion-flight.png"
+              alt="skill-1"
+              className="w-[34px] h-[34px]"
+            />
+          </div>
+          <div className="absolute top-5.5 right-7.5 text-white font-bold text-xl drop-shadow-[1px_1px_1px_rgba(0,0,0,0.8)]">
+            {immortal
+              ? Math.floor(immortalLeft / 1000)
+              : Math.floor(cooldownLeft / 1000)}
+          </div>
+        </>
+      )}
 
       {isGameOver && (
         <div className="absolute min-w-[250px] top-[50%] left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-black p-5 rounded-lg">

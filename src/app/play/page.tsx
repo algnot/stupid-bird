@@ -52,6 +52,7 @@ export default function Home() {
         INCRESE_SCORE_PER_SECONDE={gameConfig?.INCRESE_SCORE_PER_SECONDE ?? 1}
         CHARACTER_IMAGE={characterImage}
         COIN_PER_CLICK={gameConfig?.COIN_PER_CLICK ?? 1}
+        SKILL_EVASION_FLIGHT={gameConfig?.SKILL_EVASION_FLIGHT}
       />
     );
   }

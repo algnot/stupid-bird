@@ -3,6 +3,12 @@ export interface ItemInfoName {
     en: string;
 }
 
+export interface SkillEvasionFlight {
+    COOL_DOWN: number;
+    IMMORTAL_TIME: number;
+    SCORE_MULTIPLE: number;
+}
+
 export interface GameConfig {
     // debuf interval
     INTERVAL_CHANGE_DIFFICULTY: number;
@@ -34,6 +40,8 @@ export interface GameConfig {
     COIN_PER_CLICK: number;
 
     CHARACTER_IMAGE?: string;
+
+    SKILL_EVASION_FLIGHT?: SkillEvasionFlight;
 }
 
 const gameConfigLabelMap: Partial<Record<keyof GameConfig, string>> = {
