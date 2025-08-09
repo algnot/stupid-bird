@@ -428,26 +428,28 @@ export default function FlappyBird({
         </div>
       </div>
 
-      {!isGameOver && (
-        <>
-          <div
-            className={`absolute top-4 right-4 drop-shadow-[1px_1px_1px_rgba(0,0,0,0.8)] border-2 p-0.5 border-white bg-[#00000050] rounded-sm ${
-              immortal ? "" : "opacity-50"
-            }`}
-          >
-            <img
-              src="https://pub-6e552ae286d54e4d9efc4d84fab7f96f.r2.dev/skill-evasion-flight.png"
-              alt="skill-1"
-              className="w-[34px] h-[34px]"
-            />
-          </div>
-          <div className="absolute top-5.5 right-7.5 text-white font-bold text-xl drop-shadow-[1px_1px_1px_rgba(0,0,0,0.8)]">
-            {immortal
-              ? Math.floor(immortalLeft / 1000)
-              : Math.floor(cooldownLeft / 1000)}
-          </div>
-        </>
-      )}
+      {!isGameOver &&
+        SKILL_EVASION_FLIGHT &&
+        SKILL_EVASION_FLIGHT.COOL_DOWN > 0 && (
+          <>
+            <div
+              className={`absolute top-4 right-4 drop-shadow-[1px_1px_1px_rgba(0,0,0,0.8)] border-2 p-0.5 border-white bg-[#00000050] rounded-sm ${
+                immortal ? "" : "opacity-50"
+              }`}
+            >
+              <img
+                src="https://pub-6e552ae286d54e4d9efc4d84fab7f96f.r2.dev/skill-evasion-flight.png"
+                alt="skill-1"
+                className="w-[34px] h-[34px]"
+              />
+            </div>
+            <div className="absolute top-5.5 right-7.5 text-white font-bold text-xl drop-shadow-[1px_1px_1px_rgba(0,0,0,0.8)]">
+              {immortal
+                ? Math.floor(immortalLeft / 1000)
+                : Math.floor(cooldownLeft / 1000)}
+            </div>
+          </>
+        )}
 
       {isGameOver && (
         <div className="absolute min-w-[250px] top-[50%] left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-black p-5 rounded-lg">

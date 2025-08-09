@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @next/next/no-img-element */
 import { GameConfig, gameConfigLabelToLabel, Item } from "@/type/users";
 import React from "react";
@@ -34,9 +35,36 @@ function renderValue(key: keyof GameConfig, value: number) {
   );
 }
 
+function getByPath(obj: any, path: any): any {
+  return path
+    .split(".")
+    .reduce(
+      (acc: { [x: string]: any } | null, k: string | number) =>
+        acc != null ? acc[k] : undefined,
+      obj,
+    );
+}
+
+function formatNum(v: any) {
+  if (typeof v !== "number") return String(v ?? "-");
+  const hasDecimal = Math.abs(v % 1) > 1e-9;
+  return v.toLocaleString(undefined, {
+    minimumFractionDigits: hasDecimal ? 0 : 0,
+    maximumFractionDigits: 3,
+  });
+}
+
+function renderSkillText(text: string, cfg: any) {
+  return text.replace(/\{([A-Z0-9_.]+)\}/g, (_, p1) => {
+    const val = getByPath(cfg, p1);
+    return formatNum(val);
+  });
+}
+
 export default function ItemStatus({ itemInfo, onClose }: ItemStatusProps) {
   const level = itemInfo?.level ?? 0;
   const gameConfig = itemInfo?.info.level[level];
+  const skills = itemInfo?.info.skill ?? [];
 
   return (
     <>
@@ -53,9 +81,11 @@ export default function ItemStatus({ itemInfo, onClose }: ItemStatusProps) {
           >
             ×
           </button>
+
           <div className="text-md font-bold text-foreground mb-4">
             {itemInfo?.info.name.th ?? ""}
           </div>
+
           <div className="flex justify-center mb-4">
             <img
               className="w-[190px] h-[160px]"
@@ -64,11 +94,43 @@ export default function ItemStatus({ itemInfo, onClose }: ItemStatusProps) {
             />
           </div>
 
+          {skills.length > 0 && (
+            <div className="mb-4">
+              <b className="text-foreground">ความสามารถ</b>
+              <div className="mt-2 grid gap-3">
+                {skills.map((s, idx) => (
+                  <div
+                    key={`${s.title}-${idx}`}
+                    className="flex gap-3 items-start border-2 border-borderWeak rounded-lg p-3 bg-background/40"
+                  >
+                    {s.image && (
+                      <img
+                        src={s.image}
+                        alt={s.title}
+                        className="w-12 h-12 object-contain rounded-md bg-black p-1"
+                      />
+                    )}
+                    <div>
+                      <div className="text-foreground font-semibold leading-tight">
+                        {s.title}
+                      </div>
+                      {s.descript && (
+                        <div className="text-foreground/80 text-sm mt-1">
+                          {renderSkillText(s.descript, gameConfig || {})}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {gameConfig && (
             <>
               {Object.entries(GROUPED_KEYS).map(([section, keys]) => {
                 const hasAny = keys.some(
-                  (key) => gameConfig[key] && gameConfig[key] !== 0
+                  (key) => gameConfig[key] && gameConfig[key] !== 0,
                 );
                 if (!hasAny) return null;
 
@@ -78,7 +140,7 @@ export default function ItemStatus({ itemInfo, onClose }: ItemStatusProps) {
                     {keys.map((key) =>
                       gameConfig[key] && gameConfig[key] !== 0
                         ? renderValue(key, gameConfig[key] as number)
-                        : null
+                        : null,
                     )}
                   </div>
                 );

@@ -68,6 +68,12 @@ export function gameConfigLabelToLabel(key: keyof GameConfig): string {
     return gameConfigLabelMap[key] ?? key;
 }
 
+export interface Skill {
+    image: string;
+    title: string;
+    descript: string;
+}
+
 export interface ItemInfo {
     _id: string;
     image: string;
@@ -76,6 +82,7 @@ export interface ItemInfo {
     starter: boolean;
     type: "character" | "hat";
     level: GameConfig[];
+    skill: Skill[];
 }
 
 export interface Item {
