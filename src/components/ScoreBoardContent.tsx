@@ -15,7 +15,7 @@ const UserItem = ({ userId }: { userId: string }) => {
   }, []);
 
   const getUserItems = async () => {
-    const response = await backendClient.GetUserItems(userId, "true");
+    const response = await backendClient.getUserItems(userId, "true");
     if (isErrorResponse(response)) {
       return;
     }

@@ -8,7 +8,7 @@ import { Item } from "@/type/users";
 
 export default function Shop() {
   const [selectedTab, setSelectedTab] = useState<"character" | "hat">(
-    "character"
+    "character",
   );
   const [items, setItems] = useState<ItemShop[]>([]);
   const [userItems, setUserItems] = useState<Item[]>([]);
@@ -27,14 +27,14 @@ export default function Shop() {
   }, []);
 
   const fetchData = async () => {
-    const response = await backendClient.GetSaleItems(userData.isDev ?? false);
+    const response = await backendClient.getSaleItems();
     if (isErrorResponse(response)) {
       return;
     }
 
-    const userItemResponse = await backendClient.GetUserItems(
+    const userItemResponse = await backendClient.getUserItems(
       userData.userId,
-      "all"
+      "all",
     );
     if (isErrorResponse(userItemResponse)) {
       return;
@@ -63,7 +63,7 @@ export default function Shop() {
       `คุณต้องการซื้อ ${item.itemInfo.name.th} ราคา ${item.price} ${item.unit}s ใช่หรือไม่?`,
       async () => {
         setFullLoading(true);
-        const response = await backendClient.BuyItem(userData.userId, item._id);
+        const response = await backendClient.buyItem(item._id);
         setFullLoading(false);
         await fetchUser();
         if (isErrorResponse(response)) {
@@ -74,9 +74,9 @@ export default function Shop() {
           "การซื้อของคุณสำเร็จแล้ว",
           async () => {
             setFullLoading(true);
-            const userItemResponse = await backendClient.GetUserItems(
+            const userItemResponse = await backendClient.getUserItems(
               userData.userId,
-              "all"
+              "all",
             );
             setFullLoading(false);
             if (isErrorResponse(userItemResponse)) {
@@ -84,10 +84,10 @@ export default function Shop() {
             }
             setUserItems(userItemResponse.items);
           },
-          false
+          false,
         );
       },
-      true
+      true,
     );
   };
 
@@ -146,7 +146,7 @@ export default function Shop() {
                     alt={item.itemId}
                     onClick={() =>
                       setShowItemStatus(
-                        convertItemInfoToItem(userData, item.itemInfo)
+                        convertItemInfoToItem(userData, item.itemInfo),
                       )
                     }
                   />

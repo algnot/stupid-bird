@@ -18,6 +18,7 @@ import CharacterStatus from "../CharacterStatus";
 import ItemStatus from "../ItemStatus";
 import ScoreBoardContent from "../ScoreBoardContent";
 import { useAlertContext } from "./alert-provider";
+import { setItem } from "@/lib/storage";
 
 interface HelperContextType {
   setAlert: (
@@ -88,11 +89,7 @@ export function HelperProvider({ children }: { children: ReactNode }) {
       setFullLoading(true);
 
       if (process.env.NEXT_PUBLIC_FORCE_USER_ID) {
-        const response = await backendClient.getOrCreateUser({
-          userId: process.env.NEXT_PUBLIC_FORCE_USER_ID,
-          pictureUrl: "",
-          displayName: "",
-        });
+        const response = await backendClient.getOrCreateUser();
         setFullLoading(false);
         if (isErrorResponse(response)) {
           return;
@@ -109,12 +106,10 @@ export function HelperProvider({ children }: { children: ReactNode }) {
         liff.login({ redirectUri: window.location.href });
         return;
       }
-      const profile = await liff.getProfile();
-      const response = await backendClient.getOrCreateUser({
-        userId: profile.userId,
-        pictureUrl: profile?.pictureUrl ?? "",
-        displayName: profile.displayName,
-      });
+
+      const token = liff.getIDToken();
+      setItem("accessToken", token ?? "")      
+      const response = await backendClient.getOrCreateUser();
       setFullLoading(false);
 
       if (isErrorResponse(response)) {

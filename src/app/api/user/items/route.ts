@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import getDatabase from '@/lib/mongodb';
 import { ObjectId } from 'mongodb';
+import { getUserFromRequest } from '@/lib/backend-tools';
+import { JWTPayload } from 'jose';
 
 export async function GET(req: Request) {
     try {
@@ -42,7 +44,9 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
     try {
-        const { userId, itemId = "" } = await req.json();
+        const { claims } = await getUserFromRequest(req) as { claims: JWTPayload };
+        const userId = typeof claims.sub === 'string' ? claims.sub : "";
+        const { itemId = "" } = await req.json();
 
         if (!ObjectId.isValid(itemId)) {
             return NextResponse.json({ error: "Invalid itemId" }, { status: 400 });

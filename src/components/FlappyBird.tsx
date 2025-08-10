@@ -213,7 +213,6 @@ export default function FlappyBird({
 
     setFullLoading(true);
     const response = await backendClient.insertGameLog({
-      userId: userData.userId,
       coin,
       point: score,
       gameConfig: {

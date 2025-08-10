@@ -9,7 +9,7 @@ import { convertItemInfoToItem } from "@/type/shop";
 export default function Inventory() {
   const [userItems, setUserItems] = useState<Item[]>([]);
   const [selectedTab, setSelectedTab] = useState<"character" | "hat">(
-    "character"
+    "character",
   );
 
   const {
@@ -27,12 +27,12 @@ export default function Inventory() {
   }, []);
 
   const character = userData.installItems.find(
-    (item) => item.info.type === "character"
+    (item) => item.info.type === "character",
   );
   const hat = userData.installItems.find((item) => item.info.type === "hat");
 
   const fetchData = async () => {
-    const response = await backendClient.GetUserItems(userData.userId, "all");
+    const response = await backendClient.getUserItems(userData.userId, "all");
     if (isErrorResponse(response)) {
       return;
     }
@@ -46,10 +46,7 @@ export default function Inventory() {
       `คุณต้องการซื้อ ${item.info.name.th} ใช่หรือไม่?`,
       async () => {
         setFullLoading(true);
-        const response = await backendClient.installItem(
-          userData.userId,
-          item._id
-        );
+        const response = await backendClient.installItem(item._id);
         await fetchUser();
         setFullLoading(false);
         if (isErrorResponse(response)) {
@@ -60,9 +57,9 @@ export default function Inventory() {
           "ติดตั้งไอเท็มสำเร็จแล้ว",
           async () => {
             setFullLoading(true);
-            const userItemResponse = await backendClient.GetUserItems(
+            const userItemResponse = await backendClient.getUserItems(
               userData.userId,
-              "all"
+              "all",
             );
             setFullLoading(false);
             if (isErrorResponse(userItemResponse)) {
@@ -70,10 +67,10 @@ export default function Inventory() {
             }
             setUserItems(userItemResponse.items);
           },
-          false
+          false,
         );
       },
-      true
+      true,
     );
   };
 
@@ -163,7 +160,7 @@ export default function Inventory() {
                       alt={item.itemId}
                       onClick={() =>
                         setShowItemStatus(
-                          convertItemInfoToItem(userData, item.info)
+                          convertItemInfoToItem(userData, item.info),
                         )
                       }
                     />

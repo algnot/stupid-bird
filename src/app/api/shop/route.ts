@@ -1,14 +1,18 @@
 import { NextResponse } from 'next/server';
 import getDatabase from '@/lib/mongodb';
+import { getUserFromRequest } from '@/lib/backend-tools';
+import { JWTPayload } from 'jose';
 
 export async function GET(req: Request) {
     try {
-        const { searchParams } = new URL(req.url);
+        const { claims } = await getUserFromRequest(req) as { claims: JWTPayload };
+        const userId = typeof claims.sub === 'string' ? claims.sub : "";
+
         const db = await getDatabase();
-        const isDev = searchParams.get('isDev') === "true";
+        const user = await db.collection('users').findOne({ userId: userId });
         let filter: Record<string, unknown> = { isSale: true };
 
-        if (isDev) {
+        if (user?.isDev) {
             filter = {}
         }
 

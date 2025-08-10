@@ -1,7 +1,8 @@
 import { ErrorResponse } from '@/type/payload';
 import { GetItemShopResponse } from '@/type/shop';
-import { GetOrCreateUser, GetScoreBoardResponse, GetUserItemsResponse, GetUserStatusResponse, initUserType, InsertGameLogRequest, InsertGameLogResponse, UserType } from '@/type/users';
+import { GetScoreBoardResponse, GetUserItemsResponse, GetUserStatusResponse, initUserType, InsertGameLogRequest, InsertGameLogResponse, UserType } from '@/type/users';
 import axios, { AxiosInstance } from "axios";
+import { getItem } from './storage';
 
 const handlerError = (
     error: unknown,
@@ -56,12 +57,17 @@ export class BackendClient {
         isOpen: boolean,
     ) => void,) {
         this.setAlert = setAlert;
-        this.client = axios.create();
+        this.client = axios.create({
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${getItem("accessToken")}`,
+            },
+        });
     }
 
-    async getOrCreateUser(payload: GetOrCreateUser): Promise<UserType | ErrorResponse> {
+    async getOrCreateUser(): Promise<UserType | ErrorResponse> {
         try {
-            const response = await this.client.post("/api/user", payload);
+            const response = await this.client.post("/api/user");
             return response.data;
         } catch (e) {
             console.error("Failed to fetch", e);
@@ -96,7 +102,7 @@ export class BackendClient {
         }
     }
 
-    async GetUserItems(userId: string, isInstall: "true" | "false" | "all"): Promise<GetUserItemsResponse | ErrorResponse> {
+    async getUserItems(userId: string, isInstall: "true" | "false" | "all"): Promise<GetUserItemsResponse | ErrorResponse> {
         try {
             const response = await this.client.get("/api/user/items?userId=" + userId + "&isInstall=" + isInstall);
             return response.data;
@@ -105,23 +111,18 @@ export class BackendClient {
         }
     }
 
-    async GetSaleItems(isDev: boolean): Promise<GetItemShopResponse | ErrorResponse> {
+    async getSaleItems(): Promise<GetItemShopResponse | ErrorResponse> {
         try {
-            let url = "/api/shop";
-            if (isDev) {
-                url += "?isDev=true"
-            }
-            const response = await this.client.get(url);
+            const response = await this.client.get("/api/shop");
             return response.data;
         } catch (e) {
             return handlerError(e, this.setAlert);
         }
     }
 
-    async BuyItem(userId: string, shopId: string): Promise<void | ErrorResponse> {
+    async buyItem(shopId: string): Promise<void | ErrorResponse> {
         try {
             const response = await this.client.post("/api/shop/buy", {
-                userId,
                 shopId
             });
             return response.data;
@@ -130,10 +131,9 @@ export class BackendClient {
         }
     }
 
-    async installItem(userId: string, itemId: string): Promise<void | ErrorResponse> {
+    async installItem(itemId: string): Promise<void | ErrorResponse> {
         try {
             const response = await this.client.post("/api/user/items", {
-                userId,
                 itemId
             });
             return response.data;

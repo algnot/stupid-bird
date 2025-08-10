@@ -118,19 +118,12 @@ export const initUserType: UserType = {
     isDev: false,
 }
 
-export interface GetOrCreateUser {
-    userId: string;
-    pictureUrl: string;
-    displayName: string;
-}
-
 export interface GetUserStatusResponse {
     status: GameConfig;
     character: Item;
 }
 
 export interface InsertGameLogRequest {
-    userId: string;
     point: number;
     coin: number;
     gameConfig: GameConfig;

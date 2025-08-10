@@ -1,13 +1,26 @@
-/* eslint-disable prefer-const */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from 'next/server';
 import getDatabase from '@/lib/mongodb';
+import { getUserFromRequest } from '@/lib/backend-tools';
+import { JWTPayload } from 'jose';
 
 export async function POST(req: Request) {
     try {
-        let { userId, displayName, pictureUrl } = await req.json();
+        let userId = "";
+        let displayName = "";
+        let pictureUrl = "";
 
         if (process.env.NEXT_PUBLIC_FORCE_USER_ID) {
             userId = process.env.NEXT_PUBLIC_FORCE_USER_ID
+        } else {
+            const { claims } = await getUserFromRequest(req) as { claims: JWTPayload };
+            const sub = typeof claims.sub === 'string' ? claims.sub : "";
+            const name = typeof claims.name === 'string' ? claims.name : "";
+            const picture = typeof (claims as any).picture === 'string' ? (claims as any).picture : "";
+
+            userId = sub;
+            displayName = name;
+            pictureUrl = picture;
         }
 
         const db = await getDatabase();
@@ -27,7 +40,7 @@ export async function POST(req: Request) {
                 coin: 200,
                 daimond: 0,
                 isDev: false,
-                lastLogin: new Date().toDateString(),
+                lastLogin: new Date().toISOString(),
             });
 
             user = await db.collection('users').findOne({ _id: insertResult.insertedId });
@@ -38,7 +51,7 @@ export async function POST(req: Request) {
                 $set: {
                     displayName,
                     pictureUrl,
-                    lastLogin: new Date().toDateString(),
+                    lastLogin: new Date().toISOString(),
                 }
             })
             user = await db.collection('users').findOne({ userId: userId });
@@ -91,6 +104,6 @@ export async function POST(req: Request) {
 
         return NextResponse.json({ ...user, installItems: items });
     } catch (error) {
-        return NextResponse.json({ error: error }, { status: 500 });
+        return NextResponse.json({ error: error }, { status: 400 });
     }
 }
