@@ -44,27 +44,18 @@ export default function Inventory() {
     setFullLoading(true);
     const response = await backendClient.installItem(item._id);
     await fetchUser();
-    setFullLoading(false);
     if (isErrorResponse(response)) {
       return;
     }
-    setAlert(
-      "สำเร็จ",
-      "ติดตั้งไอเท็มสำเร็จแล้ว",
-      async () => {
-        setFullLoading(true);
-        const userItemResponse = await backendClient.getUserItems(
-          userData.userId,
-          "all",
-        );
-        setFullLoading(false);
-        if (isErrorResponse(userItemResponse)) {
-          return;
-        }
-        setUserItems(userItemResponse.items);
-      },
-      false,
+    const userItemResponse = await backendClient.getUserItems(
+      userData.userId,
+      "all",
     );
+    setFullLoading(false);
+    if (isErrorResponse(userItemResponse)) {
+      return;
+    }
+    setUserItems(userItemResponse.items);
   };
 
   const tabClass = (tab: string) =>
