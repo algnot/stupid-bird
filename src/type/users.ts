@@ -148,3 +148,22 @@ export interface GetScoreBoardResponse {
 export interface GetUserItemsResponse {
     items: Item[];
 }
+
+export interface ItemDaily {
+    name: 'daimond' | 'coin';
+    value: number;
+}
+
+export interface GetDailyItem {
+    items: ItemDaily[];
+}
+
+export interface GetDailyLoginResponse {
+    dailyInfo: GetDailyItem[];
+    currentReward: GetDailyItem;
+    loginStack: number;
+}
+
+export interface RequestDailyLoginResponse {
+    currentReward: GetDailyItem;
+}

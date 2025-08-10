@@ -1,6 +1,6 @@
 import { ErrorResponse } from '@/type/payload';
 import { GetItemShopResponse } from '@/type/shop';
-import { GetScoreBoardResponse, GetUserItemsResponse, GetUserStatusResponse, initUserType, InsertGameLogRequest, InsertGameLogResponse, UserType } from '@/type/users';
+import { GetDailyLoginResponse, GetScoreBoardResponse, GetUserItemsResponse, GetUserStatusResponse, initUserType, InsertGameLogRequest, InsertGameLogResponse, RequestDailyLoginResponse, UserType } from '@/type/users';
 import axios, { AxiosInstance } from "axios";
 import { getItem } from './storage';
 
@@ -93,7 +93,7 @@ export class BackendClient {
         }
     }
 
-    async GetScoreBoard(): Promise<GetScoreBoardResponse | ErrorResponse> {
+    async getScoreBoard(): Promise<GetScoreBoardResponse | ErrorResponse> {
         try {
             const response = await this.client.get("/api/score-board");
             return response.data;
@@ -136,6 +136,24 @@ export class BackendClient {
             const response = await this.client.post("/api/user/items", {
                 itemId
             });
+            return response.data;
+        } catch (e) {
+            return handlerError(e, this.setAlert);
+        }
+    }
+
+    async getDailyLogin(): Promise<GetDailyLoginResponse | ErrorResponse> {
+        try {
+            const response = await this.client.get("/api/user/daily");
+            return response.data;
+        } catch (e) {
+            return handlerError(e, this.setAlert);
+        }
+    }
+
+    async requestDailyLogin(): Promise<RequestDailyLoginResponse | ErrorResponse> {
+        try {
+            const response = await this.client.post("/api/user/daily");
             return response.data;
         } catch (e) {
             return handlerError(e, this.setAlert);

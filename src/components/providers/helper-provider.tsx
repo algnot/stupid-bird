@@ -41,6 +41,8 @@ interface HelperContextType {
   router: "character" | "shop" | "inventory";
   setRouter: (value: "character" | "shop" | "inventory") => void;
   fetchUser: () => Promise<void>;
+  valueStore: Record<string, string>;
+  setValueStore: (key: string, value: string) => void;
 }
 
 const HelperContext = createContext<() => HelperContextType>(() => {
@@ -62,6 +64,8 @@ const HelperContext = createContext<() => HelperContextType>(() => {
     router: "character",
     setRouter: () => {},
     fetchUser: async () => {},
+    valueStore: {},
+    setValueStore: () => {},
   };
 });
 
@@ -79,10 +83,17 @@ export function HelperProvider({ children }: { children: ReactNode }) {
   const [router, setRouter] = useState<"character" | "shop" | "inventory">(
     "character",
   );
+  const [allValueStore, setAllValueStore] = useState<Record<string, string>>(
+    {},
+  );
 
   useEffect(() => {
     initLiff();
   }, []);
+
+  const setValueStore = (key: string, value: string): void => {
+    setAllValueStore((prev) => ({ ...(prev ?? {}), [key]: value }));
+  };
 
   const initLiff = async () => {
     try {
@@ -143,8 +154,10 @@ export function HelperProvider({ children }: { children: ReactNode }) {
       setRouter,
       setAlert,
       fetchUser: initLiff,
+      valueStore: allValueStore,
+      setValueStore,
     }),
-    [userData, router],
+    [userData, router, allValueStore],
   );
 
   return (

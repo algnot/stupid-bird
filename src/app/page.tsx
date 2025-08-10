@@ -1,4 +1,5 @@
 "use client";
+import DailyLogin from "@/components/DailyLogin";
 import Character from "@/components/main/Character";
 import Inventory from "@/components/main/Inventory";
 import Shop from "@/components/main/Shop";
@@ -19,6 +20,7 @@ export default function Page() {
         backgroundImage: "url('/bg.png')",
       }}
     >
+      <DailyLogin />
       <TopBar />
 
       {router === "character" && <Character />}

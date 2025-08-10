@@ -54,7 +54,7 @@ export default function ScoreBoardContent() {
 
   const fetchScoreBoard = async () => {
     setLoading(true);
-    const resposne = await backendClient.GetScoreBoard();
+    const resposne = await backendClient.getScoreBoard();
     if (isErrorResponse(resposne)) {
       return;
     }
