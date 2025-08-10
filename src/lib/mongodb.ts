@@ -1,7 +1,7 @@
 import { MongoClient } from 'mongodb';
 
 const uri = process.env.MONGODB_URI || '';
-const options = {};
+const options = { maxPoolSize: 10 };
 
 if (!process.env.MONGODB_URI) {
     throw new Error('Please define the MONGODB_URI environment variable');
