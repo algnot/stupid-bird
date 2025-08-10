@@ -147,7 +147,10 @@ export class BackendClient {
             const response = await this.client.get("/api/user/daily");
             return response.data;
         } catch (e) {
-            return handlerError(e, this.setAlert);
+            console.log(e);
+            return {
+                "error": "can not get daily login"
+            }
         }
     }
 
