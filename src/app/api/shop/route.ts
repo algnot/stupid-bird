@@ -5,7 +5,7 @@ import { JWTPayload } from 'jose';
 
 export async function GET(req: Request) {
     try {
-        const { claims } = await getUserFromRequest(req) as { claims: JWTPayload };
+        const { claims } = await getUserFromRequest(req) as { claims: JWTPayload };        
         const userId = typeof claims.sub === 'string' ? claims.sub : "";
 
         const db = await getDatabase();

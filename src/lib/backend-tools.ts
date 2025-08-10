@@ -10,6 +10,16 @@ export type LineUser = {
 };
 
 export const getUserFromRequest = async (req: Request): Promise<LineUser> => {
+    if (process.env.NEXT_PUBLIC_FORCE_USER_ID) {
+        const userId = process.env.NEXT_PUBLIC_FORCE_USER_ID
+
+        return {
+            claims: {
+                sub: userId
+            }
+        }
+    }
+
     const authHeader = req.headers.get('authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
         throw new Error('Unauthorized');
