@@ -13,6 +13,11 @@ export async function POST(req: Request) {
         const db = await getDatabase();
         let user = await db.collection('users').findOne({ userId: userId });
 
+        if (process.env.NEXT_PUBLIC_FORCE_USER_ID) {
+            displayName = user?.displayName ?? "";
+            pictureUrl = user?.pictureUrl ?? "";
+        }
+
         if (!user) {
             const insertResult = await db.collection('users').insertOne({
                 userId,
@@ -21,10 +26,22 @@ export async function POST(req: Request) {
                 createdAt: new Date(),
                 coin: 200,
                 daimond: 0,
-                isDev: false
+                isDev: false,
+                lastLogin: new Date().toDateString(),
             });
 
             user = await db.collection('users').findOne({ _id: insertResult.insertedId });
+        } else {
+            await db.collection('users').updateOne({
+                userId: userId
+            }, {
+                $set: {
+                    displayName,
+                    pictureUrl,
+                    lastLogin: new Date().toDateString(),
+                }
+            })
+            user = await db.collection('users').findOne({ userId: userId });
         }
 
         let items = await db.collection('items').aggregate([
