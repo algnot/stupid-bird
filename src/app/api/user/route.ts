@@ -37,7 +37,7 @@ export async function POST(req: Request) {
                 displayName,
                 pictureUrl,
                 createdAt: new Date(),
-                coin: 200,
+                coin: 0,
                 daimond: 0,
                 isDev: false,
             });
