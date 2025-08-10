@@ -40,37 +40,30 @@ export default function Inventory() {
     setUserItems(response.items);
   };
 
-  const onInstallItem = (item: Item) => {
+  const onInstallItem = async (item: Item) => {
+    setFullLoading(true);
+    const response = await backendClient.installItem(item._id);
+    await fetchUser();
+    setFullLoading(false);
+    if (isErrorResponse(response)) {
+      return;
+    }
     setAlert(
-      "ยืนยันการติดตั้ง",
-      `คุณต้องการซื้อ ${item.info.name.th} ใช่หรือไม่?`,
+      "สำเร็จ",
+      "ติดตั้งไอเท็มสำเร็จแล้ว",
       async () => {
         setFullLoading(true);
-        const response = await backendClient.installItem(item._id);
-        await fetchUser();
+        const userItemResponse = await backendClient.getUserItems(
+          userData.userId,
+          "all",
+        );
         setFullLoading(false);
-        if (isErrorResponse(response)) {
+        if (isErrorResponse(userItemResponse)) {
           return;
         }
-        setAlert(
-          "สำเร็จ",
-          "ติดตั้งไอเท็มสำเร็จแล้ว",
-          async () => {
-            setFullLoading(true);
-            const userItemResponse = await backendClient.getUserItems(
-              userData.userId,
-              "all",
-            );
-            setFullLoading(false);
-            if (isErrorResponse(userItemResponse)) {
-              return;
-            }
-            setUserItems(userItemResponse.items);
-          },
-          false,
-        );
+        setUserItems(userItemResponse.items);
       },
-      true,
+      false,
     );
   };
 
