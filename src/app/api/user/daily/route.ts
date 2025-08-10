@@ -32,8 +32,8 @@ export async function GET(req: Request) {
             const todayStr = dayKey(new Date());
             const lastLoginStr = user?.lastLogin ? dayKey(new Date(user.lastLogin)) : null;
 
+            loginStack = loginStack % dailyInfo.length;
             if (lastLoginStr !== todayStr) {
-                loginStack = loginStack % dailyInfo.length;
                 currentReward = dailyInfo[loginStack];
             }
         }
