@@ -36,11 +36,11 @@ export default function DailyLogin() {
     setFullLoading(true);
     const response = await backendClient.requestDailyLogin();
     setFullLoading(false);
-    await fetchUser();
+    fetchUser();
+    fetchData();
     if (isErrorResponse(response)) {
       return;
     }
-
     setValueStore("dailyLogin", "");
   };
 
@@ -64,8 +64,13 @@ export default function DailyLogin() {
 
           <div className="flex flex-wrap gap-2 justify-center items-center mt-3">
             {dailyInfo?.dailyInfo.map(({ items }, index) => {
-              const isCurrentDaily = index + 1 == dailyInfo.loginStack;
-              const isClaimed = index + 1 < dailyInfo.loginStack;
+              const isCurrentDaily =
+                index + 1 == dailyInfo.loginStack &&
+                dailyInfo.currentReward.items.length > 0;
+              const isDailyClaimed = dailyInfo.currentReward.items.length == 0;
+              const isClaimed =
+                index + 1 < dailyInfo.loginStack ||
+                (isCurrentDaily && isDailyClaimed);
 
               return (
                 <div
@@ -106,33 +111,41 @@ export default function DailyLogin() {
             })}
           </div>
 
-          <div className="mt-3 text-center text-gray-400">click to claim your daily reward</div>
-          <div className="flex flex-wrap gap-2 justify-center items-center mt-3">
-            <div
-              onClick={claimDaily}
-              className="bg-primary w-fit text-black border-borderStrong border-2 rounded-xl p-2 cursor-pointer"
-            >
-              <div className="text-sm p-2 gap-2 flex">
-                {dailyInfo?.currentReward.items.map((item) => {
-                  return (
-                    <div
-                      key={item.name}
-                      className="flex flex-col justify-center items-center"
-                    >
-                      <img
-                        className="w-[30px] h-[30px]"
-                        src={
-                          item.name === "coin" ? "/coin.png" : "/daimond.png"
-                        }
-                        alt={item.name}
-                      />
-                      {item.value.toLocaleString()}
-                    </div>
-                  );
-                })}
+          {dailyInfo && dailyInfo?.currentReward.items.length > 0 && (
+            <>
+              <div className="mt-3 text-center text-gray-400">
+                click to claim your daily reward
               </div>
-            </div>
-          </div>
+              <div className="flex flex-wrap gap-2 justify-center items-center mt-3">
+                <div
+                  onClick={claimDaily}
+                  className="bg-primary w-fit text-black border-borderStrong border-2 rounded-xl p-2 cursor-pointer"
+                >
+                  <div className="text-sm p-2 gap-2 flex">
+                    {dailyInfo?.currentReward.items.map((item) => {
+                      return (
+                        <div
+                          key={item.name}
+                          className="flex flex-col justify-center items-center"
+                        >
+                          <img
+                            className="w-[30px] h-[30px]"
+                            src={
+                              item.name === "coin"
+                                ? "/coin.png"
+                                : "/daimond.png"
+                            }
+                            alt={item.name}
+                          />
+                          {item.value.toLocaleString()}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </>

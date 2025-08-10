@@ -3,7 +3,7 @@ import React from "react";
 import { useHelperContext } from "./providers/helper-provider";
 
 export default function TopBar() {
-  const { userData } = useHelperContext()();
+  const { userData, setValueStore } = useHelperContext()();
   return (
     <div className="flex justify-between p-3 items-center">
       <div className="flex gap-3">
@@ -29,7 +29,10 @@ export default function TopBar() {
         </div>
       </div>
 
-      <div className="flex items-center gap-2 bg-secondary border-borderWeak text-borderWeak border-2 px-4 py-2 rounded-xl">
+      <div
+        onClick={() => setValueStore("dailyLogin", "show")}
+        className="flex items-center gap-2 bg-secondary border-borderWeak text-borderWeak border-2 px-4 py-2 rounded-xl cursor-pointer"
+      >
         {userData.pictureUrl !== "" && (
           <img
             className="w-[40px] h-[40px] rounded-full"
