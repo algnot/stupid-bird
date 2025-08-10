@@ -450,6 +450,12 @@ export default function FlappyBird({
           </>
         )}
 
+      {!gameStarted && !isGameOver && (
+        <div className="absolute left-1/2 bottom-10 -translate-x-1/2 opacity-70 text-black p-5 text-xl">
+          Tab เพื่อเล่น
+        </div>
+      )}
+
       {isGameOver && (
         <div className="absolute min-w-[250px] top-[50%] left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-black p-5 rounded-lg">
           <div className="text-2xl text-foreground text-center">Game Over</div>

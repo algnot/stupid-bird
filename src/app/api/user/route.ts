@@ -40,7 +40,6 @@ export async function POST(req: Request) {
                 coin: 200,
                 daimond: 0,
                 isDev: false,
-                lastLogin: new Date().toISOString(),
             });
 
             user = await db.collection('users').findOne({ _id: insertResult.insertedId });
@@ -51,7 +50,6 @@ export async function POST(req: Request) {
                 $set: {
                     displayName,
                     pictureUrl,
-                    lastLogin: new Date().toISOString(),
                 }
             })
             user = await db.collection('users').findOne({ userId: userId });

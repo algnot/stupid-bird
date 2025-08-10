@@ -25,7 +25,7 @@ interface HelperContextType {
     title: string,
     text: string,
     action: undefined | (() => void),
-    canCancel: boolean
+    canCancel: boolean,
   ) => void;
   backendClient: BackendClient;
   userData: UserType;
@@ -33,7 +33,7 @@ interface HelperContextType {
   showCharacterStatus: Item | undefined;
   setShowSummaryCharacterStatus: (
     character: Item | undefined,
-    hat: Item | undefined
+    hat: Item | undefined,
   ) => void;
   showItemStatus: Item | undefined;
   setShowItemStatus: (item: Item) => void;
@@ -49,7 +49,7 @@ const HelperContext = createContext<() => HelperContextType>(() => {
       title: string,
       text: string,
       action: undefined | (() => void),
-      canCancel: boolean
+      canCancel: boolean,
     ) => {},
     backendClient: new BackendClient(() => {}),
     userData: initUserType,
@@ -77,7 +77,7 @@ export function HelperProvider({ children }: { children: ReactNode }) {
   const [showItemStatus, setShowItemStatus] = useState<Item | undefined>();
   const [isShowScoreBoard, setIsShowScoreBoard] = useState(false);
   const [router, setRouter] = useState<"character" | "shop" | "inventory">(
-    "character"
+    "character",
   );
 
   useEffect(() => {
@@ -108,7 +108,7 @@ export function HelperProvider({ children }: { children: ReactNode }) {
       }
 
       const token = liff.getIDToken();
-      setItem("accessToken", token ?? "")      
+      setItem("accessToken", token ?? "");
       const response = await backendClient.getOrCreateUser();
       setFullLoading(false);
 
@@ -123,7 +123,7 @@ export function HelperProvider({ children }: { children: ReactNode }) {
 
   const setShowSummaryCharacterStatus = (
     character: Item | undefined,
-    hat: Item | undefined
+    hat: Item | undefined,
   ) => {
     setShowCharacterStatus(character);
     setShowHatStatus(hat);
@@ -144,7 +144,7 @@ export function HelperProvider({ children }: { children: ReactNode }) {
       setAlert,
       fetchUser: initLiff,
     }),
-    [userData, router]
+    [userData, router],
   );
 
   return (
