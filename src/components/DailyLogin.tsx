@@ -13,14 +13,19 @@ export default function DailyLogin() {
     setValueStore,
     setFullLoading,
     fetchUser,
+    userData,
   } = useHelperContext()();
   const [dailyInfo, setDailyInfo] = useState<GetDailyLoginResponse>();
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [userData]);
 
   const fetchData = async () => {
+    if (userData.userId === "") {
+      return;
+    }
+
     const response = await backendClient.getDailyLogin();
     if (isErrorResponse(response)) {
       return;
