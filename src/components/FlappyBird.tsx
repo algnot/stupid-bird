@@ -115,8 +115,20 @@ export default function FlappyBird({
 
   // handler collistion
   useEffect(() => {
-    pipes.forEach((pipe) => {
-      if (immortal || pipe.immortal) return;
+    pipes.forEach((pipe, index) => {
+      if (immortal && !pipe.immortal) {
+        setPipes((prevPipes) => {
+          const newPipes = [...prevPipes];
+          if (newPipes[index]) {
+            newPipes[index] = { ...newPipes[index], immortal: true };
+          }
+          return newPipes;
+        });
+      }
+
+      if (immortal || pipe.immortal) {
+        return;
+      }
 
       const pipeBottomY = pipe.height + pipe.gap;
       const birdTop = birdPosition;
@@ -430,9 +442,9 @@ export default function FlappyBird({
       {!isGameOver &&
         SKILL_EVASION_FLIGHT &&
         SKILL_EVASION_FLIGHT.COOL_DOWN > 0 && (
-          <>
+          <div className="absolute top-4 right-4 flex gap-2">
             <div
-              className={`absolute top-4 right-4 drop-shadow-[1px_1px_1px_rgba(0,0,0,0.8)] border-2 p-0.5 border-white bg-[#00000050] rounded-sm ${
+              className={`drop-shadow-[1px_1px_1px_rgba(0,0,0,0.8)] border-2 p-0.5 border-white bg-[#00000050] rounded-sm ${
                 immortal ? "" : "opacity-50"
               }`}
             >
@@ -441,17 +453,17 @@ export default function FlappyBird({
                 alt="skill-1"
                 className="w-[34px] h-[34px]"
               />
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white font-bold text-xl drop-shadow-[1px_1px_1px_rgba(0,0,0,0.8)]">
+                {immortal
+                  ? Math.floor(immortalLeft / 1000)
+                  : Math.floor(cooldownLeft / 1000)}
+              </div>
             </div>
-            <div className="absolute top-5.5 right-7.5 text-white font-bold text-xl drop-shadow-[1px_1px_1px_rgba(0,0,0,0.8)]">
-              {immortal
-                ? Math.floor(immortalLeft / 1000)
-                : Math.floor(cooldownLeft / 1000)}
-            </div>
-          </>
+          </div>
         )}
 
       {!gameStarted && !isGameOver && (
-        <div className="absolute left-1/2 bottom-10 -translate-x-1/2 opacity-70 text-black p-5 text-xl">
+        <div className="absolute left-1/2 bottom-10 -translate-x-1/2 opacity-60 font-bold text-black p-5 text-xl">
           Tab เพื่อเล่น
         </div>
       )}
