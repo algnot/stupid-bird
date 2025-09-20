@@ -497,45 +497,47 @@ export default function FlappyBird({
         </div>
       </div>
 
-      {!isGameOver &&
-        SKILL_EVASION_FLIGHT &&
-        SKILL_EVASION_FLIGHT.COOL_DOWN > 0 && (
-          <div className="absolute top-4 right-4 flex gap-2">
-            <div
-              className={`drop-shadow-[1px_1px_1px_rgba(0,0,0,0.8)] border-2 p-0.5 border-white bg-[#00000050] rounded-sm ${
-                immortal ? "" : "opacity-50"
-              }`}
-            >
-              <img
-                src="https://pub-6e552ae286d54e4d9efc4d84fab7f96f.r2.dev/skill-evasion-flight.png"
-                alt="skill-1"
-                className="w-[34px] h-[34px]"
-              />
-            </div>
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white font-bold text-xl drop-shadow-[1px_1px_1px_rgba(0,0,0,0.8)]">
-              {immortal
-                ? Math.floor(immortalLeft / 1000)
-                : Math.floor(cooldownLeft / 1000)}
-            </div>
-          </div>
-        )}
-
-      {!isGameOver && typeof SKILL_MAGIC_TIME !== "undefined" && (
+      {!isGameOver && (
         <div className="absolute top-4 right-4 flex gap-2">
-          <div
-            className={`drop-shadow-[1px_1px_1px_rgba(0,0,0,0.8)] border-2 p-0.5 border-white bg-[#00000050] rounded-sm ${
-              immortal ? "" : "opacity-50"
-            }`}
-          >
-            <img
-              src="https://pub-6e552ae286d54e4d9efc4d84fab7f96f.r2.dev/magical-bird-skill.png"
-              alt="skill-1"
-              className="w-[34px] h-[34px]"
-            />
-          </div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white font-bold text-xl drop-shadow-[1px_1px_1px_rgba(0,0,0,0.8)]">
-            {magicStack}
-          </div>
+          {SKILL_EVASION_FLIGHT && SKILL_EVASION_FLIGHT.COOL_DOWN > 0 && (
+            <div className="relative">
+              <div
+                className={`drop-shadow-[1px_1px_1px_rgba(0,0,0,0.8)] border-2 p-0.5 border-white bg-[#00000050] rounded-sm ${
+                  immortal ? "" : "opacity-50"
+                }`}
+              >
+                <img
+                  src="https://pub-6e552ae286d54e4d9efc4d84fab7f96f.r2.dev/skill-evasion-flight.png"
+                  alt="skill-1"
+                  className="w-[34px] h-[34px]"
+                />
+              </div>
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white font-bold text-xl drop-shadow-[1px_1px_1px_rgba(0,0,0,0.8)]">
+                {immortal
+                  ? Math.floor(immortalLeft / 1000)
+                  : Math.floor(cooldownLeft / 1000)}
+              </div>
+            </div>
+          )}
+
+          {typeof SKILL_MAGIC_TIME !== "undefined" && (
+            <div className="relative">
+              <div
+                className={`drop-shadow-[1px_1px_1px_rgba(0,0,0,0.8)] border-2 p-0.5 border-white bg-[#00000050] rounded-sm ${
+                  immortal ? "" : "opacity-50"
+                }`}
+              >
+                <img
+                  src="https://pub-6e552ae286d54e4d9efc4d84fab7f96f.r2.dev/magical-bird-skill.png"
+                  alt="skill-2"
+                  className="w-[34px] h-[34px]"
+                />
+              </div>
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white font-bold text-xl drop-shadow-[1px_1px_1px_rgba(0,0,0,0.8)]">
+                {magicStack}
+              </div>
+            </div>
+          )}
         </div>
       )}
 
