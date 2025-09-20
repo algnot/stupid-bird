@@ -149,7 +149,10 @@ export default function FlappyBird({
       const hitBottomPipe = birdBottom > pipeBottomY + COLLISION_MARGIN;
 
       if (inPipeXRange && (hitTopPipe || hitBottomPipe)) {
-        if (magicStack >= (SKILL_MAGIC_TIME?.MAGIC_STACK_SHILD ?? 1)) {
+        if (
+          typeof SKILL_MAGIC_TIME !== "undefined" &&
+          magicStack >= (SKILL_MAGIC_TIME?.MAGIC_STACK_SHILD ?? 1)
+        ) {
           setMagicStack(
             (prevStack) =>
               prevStack - (SKILL_MAGIC_TIME?.MAGIC_STACK_SHILD ?? 1),
