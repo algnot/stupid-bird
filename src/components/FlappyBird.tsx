@@ -223,7 +223,7 @@ export default function FlappyBird({
               if (!pipe.isPassed && pipe.left + PIPE_WIDTH < 50) {
                 setMagicStack((prevStack) => {
                   if (prevStack < (SKILL_MAGIC_TIME?.MAGIC_STACK_MAX ?? 1)) {
-                    return prevStack + (SKILL_MAGIC_TIME?.MAGIC_STACK ?? 1) / 2;
+                    return prevStack + (SKILL_MAGIC_TIME?.MAGIC_STACK ?? 1);
                   }
                   return prevStack;
                 });
