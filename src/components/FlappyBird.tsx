@@ -150,6 +150,7 @@ export default function FlappyBird({
 
       if (inPipeXRange && (hitTopPipe || hitBottomPipe)) {
         if (
+          (SKILL_MAGIC_TIME?.MAGIC_STACK_SHILD ?? 1) > 0 &&
           typeof SKILL_MAGIC_TIME !== "undefined" &&
           magicStack >= (SKILL_MAGIC_TIME?.MAGIC_STACK_SHILD ?? 1)
         ) {
@@ -190,9 +191,12 @@ export default function FlappyBird({
           multiplyScore = SKILL_EVASION_FLIGHT?.SCORE_MULTIPLE ?? 1;
         }
         if (typeof SKILL_MAGIC_TIME !== "undefined") {
+          const magicStackCount = SKILL_MAGIC_TIME?.MAGIC_STACK_COUNT ?? 1;
           multiplyScore =
             (SKILL_MAGIC_TIME?.MAGIC_STACK_MULTIPLY ?? 1) *
-            Math.floor(magicStack / (SKILL_MAGIC_TIME?.MAGIC_STACK_COUNT ?? 1));
+            Math.floor(
+              magicStack / (magicStackCount > 0 ? magicStackCount : 1),
+            );
         }
         if (multiplyScore <= 0) {
           multiplyScore = 1;
@@ -258,13 +262,15 @@ export default function FlappyBird({
       const jumpHeight = window.innerHeight * MULTIPLY_JUMP_HEIGHT;
       let multiplyCoin = 0;
       if (typeof SKILL_MAGIC_TIME !== "undefined") {
+        const magicStackCount = SKILL_MAGIC_TIME?.MAGIC_STACK_COUNT ?? 1;
         multiplyCoin =
           (SKILL_MAGIC_TIME?.MAGIC_STACK_MULTIPLY ?? 1) *
-          Math.floor(magicStack / (SKILL_MAGIC_TIME?.MAGIC_STACK_COUNT ?? 1));
+          Math.floor(magicStack / (magicStackCount > 0 ? magicStackCount : 1));
       }
       if (multiplyCoin <= 0) {
         multiplyCoin = 1;
       }
+      console.log(multiplyCoin);
       setCoin((coin) => coin + COIN_PER_CLICK * multiplyCoin);
       setBirdPosition((pos) => Math.max(0, pos - jumpHeight));
       setBirdAngle(-30);
