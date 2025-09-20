@@ -12,6 +12,7 @@ interface Pipe {
   height: number;
   gap: number;
   immortal: boolean;
+  isPassed: boolean;
 }
 
 const PIPE_WIDTH = 60;
@@ -38,8 +39,9 @@ export default function FlappyBird({
   CHARACTER_IMAGE,
   COIN_PER_CLICK,
   SKILL_EVASION_FLIGHT,
+  SKILL_MAGIC_TIME,
 }: GameConfig) {
-  const { setFullLoading, backendClient, userData } = useHelperContext()();
+  const { setFullLoading, backendClient } = useHelperContext()();
   const [gameHeight, setGameHeight] = useState<number>(600);
   const [birdPosition, setBirdPosition] = useState<number>(300);
   const [pipes, setPipes] = useState<Pipe[]>([]);
@@ -106,12 +108,17 @@ export default function FlappyBird({
           height: topHeight,
           gap: pipeGap,
           immortal: false,
+          isPassed: false,
         },
       ]);
     }, pipeInterval);
 
     return () => clearInterval(intervalId);
   }, [gameStarted, isGameOver, gameHeight, pipeGap, pipeInterval]);
+
+  // start skill: Magic Time
+  const [magicStack, setMagicStack] = useState(0);
+  // end skill: Magic Time
 
   // handler collistion
   useEffect(() => {
@@ -142,6 +149,20 @@ export default function FlappyBird({
       const hitBottomPipe = birdBottom > pipeBottomY + COLLISION_MARGIN;
 
       if (inPipeXRange && (hitTopPipe || hitBottomPipe)) {
+        if (magicStack >= (SKILL_MAGIC_TIME?.MAGIC_STACK_SHILD ?? 1)) {
+          setMagicStack(
+            (prevStack) =>
+              prevStack - (SKILL_MAGIC_TIME?.MAGIC_STACK_SHILD ?? 1),
+          );
+          setPipes((prevPipes) => {
+            const newPipes = [...prevPipes];
+            if (newPipes[index]) {
+              newPipes[index] = { ...newPipes[index], immortal: true };
+            }
+            return newPipes;
+          });
+          return;
+        }
         endGame();
       }
     });
@@ -151,7 +172,7 @@ export default function FlappyBird({
         endGame();
       }
     }
-  }, [pipes, birdPosition, gameHeight]);
+  }, [pipes, birdPosition, gameHeight, magicStack]);
 
   // handler game state
   useEffect(() => {
@@ -165,11 +186,19 @@ export default function FlappyBird({
         ) {
           multiplyScore = SKILL_EVASION_FLIGHT?.SCORE_MULTIPLE ?? 1;
         }
+        if (typeof SKILL_MAGIC_TIME !== "undefined") {
+          multiplyScore =
+            (SKILL_MAGIC_TIME?.MAGIC_STACK_MULTIPLY ?? 1) *
+            Math.floor(magicStack / (SKILL_MAGIC_TIME?.MAGIC_STACK_COUNT ?? 1));
+        }
+        if (multiplyScore <= 0) {
+          multiplyScore = 1;
+        }
         setScore((score) => score + INCRESE_SCORE_PER_SECONDE * multiplyScore);
       }, SECONDE_PER_SCORE);
       return () => clearInterval(interval);
     }
-  }, [gameStarted, isGameOver, immortal]);
+  }, [gameStarted, isGameOver, immortal, magicStack]);
 
   // handler click
   useEffect(() => {
@@ -180,7 +209,7 @@ export default function FlappyBird({
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [isGameOver]);
+  }, [isGameOver, magicStack]);
 
   // handler move
   useEffect(() => {
@@ -190,7 +219,18 @@ export default function FlappyBird({
         // speed
         setPipes((oldPipes) =>
           oldPipes
-            .map((pipe) => ({ ...pipe, left: pipe.left - speed }))
+            .map((pipe) => {
+              if (!pipe.isPassed && pipe.left + PIPE_WIDTH < 50) {
+                setMagicStack((prevStack) => {
+                  if (prevStack < (SKILL_MAGIC_TIME?.MAGIC_STACK_MAX ?? 1)) {
+                    return prevStack + (SKILL_MAGIC_TIME?.MAGIC_STACK ?? 1) / 2;
+                  }
+                  return prevStack;
+                });
+                return { ...pipe, left: pipe.left - speed, isPassed: true };
+              }
+              return { ...pipe, left: pipe.left - speed };
+            })
             .filter((pipe) => pipe.left + PIPE_WIDTH > 0),
         );
       }, 30);
@@ -213,7 +253,16 @@ export default function FlappyBird({
     }
     if (!isGameOver) {
       const jumpHeight = window.innerHeight * MULTIPLY_JUMP_HEIGHT;
-      setCoin((coin) => coin + COIN_PER_CLICK);
+      let multiplyCoin = 0;
+      if (typeof SKILL_MAGIC_TIME !== "undefined") {
+        multiplyCoin =
+          (SKILL_MAGIC_TIME?.MAGIC_STACK_MULTIPLY ?? 1) *
+          Math.floor(magicStack / (SKILL_MAGIC_TIME?.MAGIC_STACK_COUNT ?? 1));
+      }
+      if (multiplyCoin <= 0) {
+        multiplyCoin = 1;
+      }
+      setCoin((coin) => coin + COIN_PER_CLICK * multiplyCoin);
       setBirdPosition((pos) => Math.max(0, pos - jumpHeight));
       setBirdAngle(-30);
     }
@@ -453,14 +502,33 @@ export default function FlappyBird({
                 alt="skill-1"
                 className="w-[34px] h-[34px]"
               />
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white font-bold text-xl drop-shadow-[1px_1px_1px_rgba(0,0,0,0.8)]">
-                {immortal
-                  ? Math.floor(immortalLeft / 1000)
-                  : Math.floor(cooldownLeft / 1000)}
-              </div>
+            </div>
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white font-bold text-xl drop-shadow-[1px_1px_1px_rgba(0,0,0,0.8)]">
+              {immortal
+                ? Math.floor(immortalLeft / 1000)
+                : Math.floor(cooldownLeft / 1000)}
             </div>
           </div>
         )}
+
+      {!isGameOver && typeof SKILL_MAGIC_TIME !== "undefined" && (
+        <div className="absolute top-4 right-4 flex gap-2">
+          <div
+            className={`drop-shadow-[1px_1px_1px_rgba(0,0,0,0.8)] border-2 p-0.5 border-white bg-[#00000050] rounded-sm ${
+              immortal ? "" : "opacity-50"
+            }`}
+          >
+            <img
+              src="https://pub-6e552ae286d54e4d9efc4d84fab7f96f.r2.dev/magical-bird-skill.png"
+              alt="skill-1"
+              className="w-[34px] h-[34px]"
+            />
+          </div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white font-bold text-xl drop-shadow-[1px_1px_1px_rgba(0,0,0,0.8)]">
+            {magicStack}
+          </div>
+        </div>
+      )}
 
       {!gameStarted && !isGameOver && (
         <div className="absolute left-1/2 bottom-10 -translate-x-1/2 opacity-60 font-bold text-black p-5 text-xl">

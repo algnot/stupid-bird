@@ -53,6 +53,7 @@ export default function Home() {
         CHARACTER_IMAGE={characterImage}
         COIN_PER_CLICK={gameConfig?.COIN_PER_CLICK ?? 1}
         SKILL_EVASION_FLIGHT={gameConfig?.SKILL_EVASION_FLIGHT}
+        SKILL_MAGIC_TIME={gameConfig?.SKILL_MAGIC_TIME}
       />
     );
   }

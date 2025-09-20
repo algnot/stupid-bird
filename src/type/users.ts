@@ -9,6 +9,14 @@ export interface SkillEvasionFlight {
     SCORE_MULTIPLE: number;
 }
 
+export interface SkillMagicTime {
+    MAGIC_STACK: number;
+    MAGIC_STACK_MULTIPLY: number;
+    MAGIC_STACK_COUNT: number;
+    MAGIC_STACK_SHILD: number;
+    MAGIC_STACK_MAX: number;
+}
+
 export interface GameConfig {
     // debuf interval
     INTERVAL_CHANGE_DIFFICULTY: number;
@@ -42,6 +50,8 @@ export interface GameConfig {
     CHARACTER_IMAGE?: string;
 
     SKILL_EVASION_FLIGHT?: SkillEvasionFlight;
+
+    SKILL_MAGIC_TIME?: SkillMagicTime;
 }
 
 const gameConfigLabelMap: Partial<Record<keyof GameConfig, string>> = {
