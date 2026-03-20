@@ -12,7 +12,8 @@
 }
 
 * {
-  font-family: "Playpen Sans Thai", sans-serif;
+  /* next/font/google provides the actual loaded font via this CSS variable */
+  font-family: var(--font-playpen-sans), sans-serif;
 }
 
 body {

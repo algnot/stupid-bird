@@ -18,7 +18,6 @@ export default function Inventory() {
     setShowSummaryCharacterStatus,
     setShowItemStatus,
     setFullLoading,
-    setAlert,
     fetchUser,
   } = useHelperContext()();
 

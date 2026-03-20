@@ -5,7 +5,8 @@ import { FullLoadingProvider } from "@/components/providers/full-loading-provide
 import { AlertDialogProvider } from "@/components/providers/alert-provider";
 
 const playpenSans = Playpen_Sans_Thai({
-  subsets: ["latin"],
+  // Thai app; include Thai glyph subset to avoid missing-character fallbacks.
+  subsets: ["thai", "latin"],
   variable: "--font-playpen-sans",
 });
 
